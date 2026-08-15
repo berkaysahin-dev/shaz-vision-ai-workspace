@@ -28,11 +28,14 @@ import {
 } from '../services/mockData';
 import { sound } from '../services/soundEngine';
 import { Language, translations } from '../services/i18n';
+import { ThemeId, THEMES } from '../services/themeManager';
 
 interface WorkspaceContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
   t: typeof translations.en;
+  currentTheme: ThemeId;
+  setCurrentTheme: (theme: ThemeId) => void;
   activeTeam: TeamId;
   setActiveTeam: (team: TeamId) => void;
   mainView: MainViewTab;
@@ -97,7 +100,8 @@ interface WorkspaceContextType {
 const WorkspaceContext = createContext<WorkspaceContextType | undefined>(undefined);
 
 export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLanguageState] = useState<Language>('tr'); // Default to TR as requested by user
+  const [language, setLanguageState] = useState<Language>('tr');
+  const [currentTheme, setCurrentThemeState] = useState<ThemeId>('espresso'); // Default to Espresso as featured in user screenshot
   const [activeTeam, setActiveTeamState] = useState<TeamId>('PRODUCT');
   const [mainView, setMainViewState] = useState<MainViewTab>('office');
   const [agents, setAgents] = useState<Record<string, Agent>>(initialAgents);
@@ -127,6 +131,11 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const setLanguage = (lang: Language) => {
     sound.playClick();
     setLanguageState(lang);
+  };
+
+  const setCurrentTheme = (theme: ThemeId) => {
+    sound.playClick();
+    setCurrentThemeState(theme);
   };
 
   const t = translations[language];
@@ -365,6 +374,8 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         language,
         setLanguage,
         t,
+        currentTheme,
+        setCurrentTheme,
         activeTeam,
         setActiveTeam,
         mainView,
