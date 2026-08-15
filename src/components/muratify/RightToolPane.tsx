@@ -75,9 +75,21 @@ export const RightToolPane: React.FC = () => {
   ];
 
   return (
-    <div className="w-[330px] xl:w-[370px] bg-[#10131D] border-l border-[#1E2333] flex flex-col justify-between shrink-0 overflow-y-auto select-none">
+    <div
+      className="w-[330px] xl:w-[370px] border-l flex flex-col justify-between shrink-0 overflow-y-auto select-none transition-colors duration-300"
+      style={{
+        backgroundColor: 'var(--app-bg-panel, #10131D)',
+        borderColor: 'var(--app-border, #1E2333)',
+      }}
+    >
       {/* Right Sub-Header Tabs */}
-      <div className="h-8 bg-[#141824] border-b border-[#1E2333] px-3 flex items-center justify-between text-xs font-mono text-slate-400 shrink-0">
+      <div
+        className="h-8 border-b px-3 flex items-center justify-between text-xs font-mono text-slate-400 shrink-0 transition-colors duration-300"
+        style={{
+          backgroundColor: 'var(--app-bg-panel, #141824)',
+          borderColor: 'var(--app-border, #1E2333)',
+        }}
+      >
         <div className="flex items-center gap-3 overflow-x-auto">
           {tabs.map((tab) => {
             const isActive = rightTab === tab.id;
@@ -88,9 +100,10 @@ export const RightToolPane: React.FC = () => {
                   sound.playClick();
                   setRightTab(tab.id);
                 }}
-                className={`flex items-center gap-1.5 font-bold transition-colors whitespace-nowrap ${
-                  isActive ? 'text-amber-300' : 'text-slate-500 hover:text-slate-300'
-                }`}
+                className="flex items-center gap-1.5 font-bold transition-colors whitespace-nowrap"
+                style={{
+                  color: isActive ? 'var(--app-text-accent, #FECDD3)' : '#64748B',
+                }}
               >
                 {tab.color && <span className={`w-2 h-2 rounded-full ${tab.color}`} />}
                 <span>{tab.label}</span>
@@ -110,7 +123,11 @@ export const RightToolPane: React.FC = () => {
                 setIsTaskModalOpen(true);
               }}
               title={t.newTask}
-              className="p-1 rounded bg-[#1C2336] hover:bg-[#28324D] text-amber-300 border border-[#2D3854]"
+              className="p-1 rounded text-amber-300 border transition-colors"
+              style={{
+                backgroundColor: 'var(--app-bg-surface, #1C2336)',
+                borderColor: 'var(--app-border, #2D3854)',
+              }}
             >
               <Plus className="w-3 h-3" />
             </button>
@@ -129,7 +146,8 @@ export const RightToolPane: React.FC = () => {
               </span>
               <button
                 onClick={() => setIsTaskModalOpen(true)}
-                className="text-[10px] text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1"
+                className="text-[10px] font-bold flex items-center gap-1"
+                style={{ color: 'var(--app-text-accent, #FECDD3)' }}
               >
                 <Plus className="w-3 h-3" /> {t.newTask}
               </button>
@@ -137,7 +155,7 @@ export const RightToolPane: React.FC = () => {
 
             {/* In Progress */}
             <div className="space-y-2">
-              <div className="text-[10px] text-amber-400 font-bold flex justify-between">
+              <div className="text-[10px] font-bold flex justify-between" style={{ color: 'var(--app-accent, #E0564C)' }}>
                 <span>{t.inProgress} ({inProgressTasks.length})</span>
                 <span className="text-slate-500">Active</span>
               </div>
@@ -146,11 +164,15 @@ export const RightToolPane: React.FC = () => {
                 <div
                   key={task.id}
                   onClick={() => handleStatusShift(task.id, task.status)}
-                  className="p-2.5 rounded-lg bg-[#141724] border border-amber-500/40 hover:border-amber-400 transition-all shadow-md space-y-1.5 cursor-pointer group"
+                  className="p-2.5 rounded-lg border transition-all shadow-md space-y-1.5 cursor-pointer group"
+                  style={{
+                    backgroundColor: 'var(--app-bg-surface, #141724)',
+                    borderColor: 'var(--app-accent, #E0564C)',
+                  }}
                 >
                   <div className="flex justify-between items-center text-[9px] text-slate-400 font-mono">
-                    <span className="text-amber-300 font-bold">{task.id}</span>
-                    <span className="text-[8px] px-1 py-0.2 rounded bg-slate-800 text-slate-300">
+                    <span className="font-bold" style={{ color: 'var(--app-text-accent, #FECDD3)' }}>{task.id}</span>
+                    <span className="text-[8px] px-1 py-0.2 rounded bg-black/40 text-slate-300">
                       {task.priority}
                     </span>
                   </div>
@@ -159,10 +181,13 @@ export const RightToolPane: React.FC = () => {
                     {task.title}
                   </div>
 
-                  <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-[#1F263A]">
+                  <div
+                    className="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t"
+                    style={{ borderColor: 'var(--app-border, #1F263A)' }}
+                  >
                     <span>{task.team}</span>
-                    <div className="flex items-center gap-1 text-purple-400 font-bold">
-                      <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+                    <div className="flex items-center gap-1 font-bold" style={{ color: 'var(--app-accent, #E0564C)' }}>
+                      <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: 'var(--app-accent, #E0564C)' }} />
                       <span>{agents[task.assignedAgent]?.name || task.assignedAgent}</span>
                     </div>
                   </div>
@@ -171,13 +196,17 @@ export const RightToolPane: React.FC = () => {
             </div>
 
             {/* TODO */}
-            <div className="space-y-2 pt-2 border-t border-[#1E2333]">
+            <div className="space-y-2 pt-2 border-t" style={{ borderColor: 'var(--app-border, #1E2333)' }}>
               <div className="text-[10px] text-slate-400 font-bold">{t.todo} ({todoTasks.length})</div>
               {todoTasks.map((task) => (
                 <div
                   key={task.id}
                   onClick={() => handleStatusShift(task.id, task.status)}
-                  className="p-2 rounded bg-[#0A0C13] border border-[#1A2030] hover:border-slate-600 cursor-pointer text-slate-300 text-[11px]"
+                  className="p-2 rounded border hover:border-slate-500 cursor-pointer text-slate-300 text-[11px]"
+                  style={{
+                    backgroundColor: 'var(--app-bg-dark, #0A0C13)',
+                    borderColor: 'var(--app-border, #1A2030)',
+                  }}
                 >
                   <div className="font-semibold truncate">{task.title}</div>
                   <div className="text-[9px] text-slate-500 mt-1 flex justify-between">
@@ -189,12 +218,16 @@ export const RightToolPane: React.FC = () => {
             </div>
 
             {/* Done */}
-            <div className="space-y-2 pt-2 border-t border-[#1E2333]">
+            <div className="space-y-2 pt-2 border-t" style={{ borderColor: 'var(--app-border, #1E2333)' }}>
               <div className="text-[10px] text-emerald-400 font-bold">{t.done} ({doneTasks.length})</div>
               {doneTasks.slice(0, 2).map((task) => (
                 <div
                   key={task.id}
-                  className="p-2 rounded bg-[#0A0C13]/60 border border-[#1A2030] text-slate-400 text-[10px] flex justify-between items-center"
+                  className="p-2 rounded border text-slate-400 text-[10px] flex justify-between items-center"
+                  style={{
+                    backgroundColor: 'var(--app-bg-dark, #0A0C13)',
+                    borderColor: 'var(--app-border, #1A2030)',
+                  }}
                 >
                   <span className="truncate">{task.title}</span>
                   <span className="text-emerald-400 font-bold shrink-0">✓ {t.done}</span>
@@ -207,7 +240,14 @@ export const RightToolPane: React.FC = () => {
         {/* BROWSER WORKSPACE */}
         {rightTab === 'browser' && (
           <div className="space-y-2.5 font-mono text-xs flex flex-col h-full">
-            <form onSubmit={handleBrowserSubmit} className="flex items-center gap-1.5 bg-[#090C13] p-1.5 rounded-lg border border-[#1E2333]">
+            <form
+              onSubmit={handleBrowserSubmit}
+              className="flex items-center gap-1.5 p-1.5 rounded-lg border"
+              style={{
+                backgroundColor: 'var(--app-bg-dark, #090C13)',
+                borderColor: 'var(--app-border, #1E2333)',
+              }}
+            >
               <button
                 type="button"
                 onClick={reloadBrowser}
@@ -232,40 +272,58 @@ export const RightToolPane: React.FC = () => {
               </button>
             </form>
 
-            <div className="flex items-center gap-1 bg-[#090C14] p-1 rounded-lg border border-[#1E2538] text-[10px]">
+            <div
+              className="flex items-center gap-1 p-1 rounded-lg border text-[10px]"
+              style={{
+                backgroundColor: 'var(--app-bg-dark, #090C14)',
+                borderColor: 'var(--app-border, #1E2538)',
+              }}
+            >
               <button
                 onClick={() => setBrowserSubTab('preview')}
                 className={`flex-1 py-1 rounded font-bold transition-all ${
-                  browserSubTab === 'preview' ? 'bg-cyan-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
+                  browserSubTab === 'preview' ? 'text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
                 }`}
+                style={browserSubTab === 'preview' ? { backgroundColor: 'var(--app-accent, #E0564C)' } : {}}
               >
                 {t.liveDom}
               </button>
               <button
                 onClick={() => setBrowserSubTab('toolCalls')}
                 className={`flex-1 py-1 rounded font-bold transition-all ${
-                  browserSubTab === 'toolCalls' ? 'bg-cyan-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
+                  browserSubTab === 'toolCalls' ? 'text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
                 }`}
+                style={browserSubTab === 'toolCalls' ? { backgroundColor: 'var(--app-accent, #E0564C)' } : {}}
               >
                 {t.toolCalls} (5)
               </button>
               <button
                 onClick={() => setBrowserSubTab('console')}
                 className={`flex-1 py-1 rounded font-bold transition-all ${
-                  browserSubTab === 'console' ? 'bg-cyan-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
+                  browserSubTab === 'console' ? 'text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
                 }`}
+                style={browserSubTab === 'console' ? { backgroundColor: 'var(--app-accent, #E0564C)' } : {}}
               >
                 {t.devtools}
               </button>
             </div>
 
             {browserSubTab === 'preview' && (
-              <div className="flex-1 bg-[#06080F] border border-[#1E2436] rounded-xl p-3 flex flex-col justify-between overflow-y-auto shadow-inner">
+              <div
+                className="flex-1 border rounded-xl p-3 flex flex-col justify-between overflow-y-auto shadow-inner"
+                style={{
+                  backgroundColor: 'var(--app-terminal-bg, #06080F)',
+                  borderColor: 'var(--app-border, #1E2436)',
+                }}
+              >
                 <div
                   dangerouslySetInnerHTML={{ __html: browserPage.domHtml }}
                   className="w-full flex-1"
                 />
-                <div className="mt-3 pt-2 border-t border-[#1C2234] text-[9px] text-slate-500 font-mono flex justify-between">
+                <div
+                  className="mt-3 pt-2 border-t text-[9px] text-slate-500 font-mono flex justify-between"
+                  style={{ borderColor: 'var(--app-border, #1C2234)' }}
+                >
                   <span className="text-emerald-400 font-bold">● {t.status}: {browserPage.status}</span>
                   <span>{t.viewport}: {browserViewport === 'desktop' ? '1440x900' : '375x812'}</span>
                 </div>
@@ -273,14 +331,27 @@ export const RightToolPane: React.FC = () => {
             )}
 
             {browserSubTab === 'toolCalls' && (
-              <div className="flex-1 bg-[#06080F] border border-[#1E2436] rounded-xl p-2.5 overflow-y-auto space-y-2">
+              <div
+                className="flex-1 border rounded-xl p-2.5 overflow-y-auto space-y-2"
+                style={{
+                  backgroundColor: 'var(--app-terminal-bg, #06080F)',
+                  borderColor: 'var(--app-border, #1E2436)',
+                }}
+              >
                 <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">
                   {t.toolCalls}
                 </div>
                 {browserToolCalls.map((tc, idx) => (
-                  <div key={idx} className="p-2 rounded-lg bg-[#0E121D] border border-[#1E273D] text-[10px] space-y-1">
+                  <div
+                    key={idx}
+                    className="p-2 rounded-lg border text-[10px] space-y-1"
+                    style={{
+                      backgroundColor: 'var(--app-bg-surface, #0E121D)',
+                      borderColor: 'var(--app-border, #1E273D)',
+                    }}
+                  >
                     <div className="flex justify-between items-center">
-                      <span className="text-purple-400 font-bold flex items-center gap-1">
+                      <span className="font-bold flex items-center gap-1" style={{ color: 'var(--app-accent, #E0564C)' }}>
                         <MousePointer className="w-2.5 h-2.5 text-cyan-400" />
                         {tc.tool}
                       </span>
@@ -294,12 +365,22 @@ export const RightToolPane: React.FC = () => {
             )}
 
             {browserSubTab === 'console' && (
-              <div className="flex-1 bg-[#06080F] border border-[#1E2436] rounded-xl p-2.5 overflow-y-auto space-y-1.5">
+              <div
+                className="flex-1 border rounded-xl p-2.5 overflow-y-auto space-y-1.5"
+                style={{
+                  backgroundColor: 'var(--app-terminal-bg, #06080F)',
+                  borderColor: 'var(--app-border, #1E2436)',
+                }}
+              >
                 <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">
                   {t.devtools}
                 </div>
                 {browserPage.consoleLogs.map((log, idx) => (
-                  <div key={idx} className="p-1.5 rounded bg-[#0A0D15] text-[10px] text-emerald-400 font-mono">
+                  <div
+                    key={idx}
+                    className="p-1.5 rounded text-[10px] text-emerald-400 font-mono"
+                    style={{ backgroundColor: 'var(--app-bg-dark, #0A0D15)' }}
+                  >
                     {log}
                   </div>
                 ))}
@@ -315,7 +396,14 @@ export const RightToolPane: React.FC = () => {
               {t.tabReports} & Telemetry
             </h3>
             {reports.map((rep) => (
-              <div key={rep.id} className="p-3 bg-[#0A0C13] border border-[#1E2333] rounded-lg space-y-2">
+              <div
+                key={rep.id}
+                className="p-3 border rounded-lg space-y-2"
+                style={{
+                  backgroundColor: 'var(--app-bg-dark, #0A0C13)',
+                  borderColor: 'var(--app-border, #1E2333)',
+                }}
+              >
                 <div className="flex justify-between items-start">
                   <div className="font-bold text-slate-200">{rep.title}</div>
                   <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-500/30">
@@ -323,7 +411,10 @@ export const RightToolPane: React.FC = () => {
                   </span>
                 </div>
                 <div className="text-[11px] text-slate-400">{rep.agentSummary}</div>
-                <div className="flex justify-between text-[10px] text-slate-500 pt-1 border-t border-[#1E2333]">
+                <div
+                  className="flex justify-between text-[10px] text-slate-500 pt-1 border-t"
+                  style={{ borderColor: 'var(--app-border, #1E2333)' }}
+                >
                   <span>{rep.date}</span>
                   <span className="text-cyan-400 font-bold">{rep.coverage} Coverage</span>
                 </div>
@@ -345,7 +436,11 @@ export const RightToolPane: React.FC = () => {
             {mcpServers.map((server) => (
               <div
                 key={server.id}
-                className="p-3 bg-[#0A0C13] border border-[#1E2333] rounded-lg space-y-2"
+                className="p-3 border rounded-lg space-y-2"
+                style={{
+                  backgroundColor: 'var(--app-bg-dark, #0A0C13)',
+                  borderColor: 'var(--app-border, #1E2333)',
+                }}
               >
                 <div className="flex justify-between items-center">
                   <div className="font-bold text-slate-200 text-xs">{server.name}</div>
@@ -365,7 +460,11 @@ export const RightToolPane: React.FC = () => {
                   {server.tools.map((tool) => (
                     <span
                       key={tool}
-                      className="px-1.5 py-0.5 rounded bg-[#131724] border border-[#1F263B] text-[9px] text-slate-400"
+                      className="px-1.5 py-0.5 rounded border text-[9px] text-slate-400"
+                      style={{
+                        backgroundColor: 'var(--app-bg-surface, #131724)',
+                        borderColor: 'var(--app-border, #1F263B)',
+                      }}
                     >
                       {tool}
                     </span>

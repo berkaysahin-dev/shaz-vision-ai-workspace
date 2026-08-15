@@ -18,24 +18,46 @@ export const BottomCommandBar: React.FC = () => {
   };
 
   return (
-    <footer className="h-24 bg-[#0F121C] border-t border-[#1F263A] p-2.5 px-4 flex flex-col justify-between shrink-0 select-none z-40">
+    <footer
+      className="h-24 border-t p-2.5 px-4 flex flex-col justify-between shrink-0 select-none z-40 transition-colors duration-300"
+      style={{
+        backgroundColor: 'var(--app-bg-panel, #0F121C)',
+        borderColor: 'var(--app-border, #1F263A)',
+      }}
+    >
       {/* Telemetry Status Line */}
       <div className="flex items-center justify-between text-xs font-mono">
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-purple-950/80 border border-purple-500/40 text-purple-300">
-            <Mic className="w-3 h-3 text-purple-400" />
+          <div
+            className="flex items-center gap-1 px-2 py-0.5 rounded-full border"
+            style={{
+              backgroundColor: 'var(--app-badge-bg, rgba(224, 86, 76, 0.2))',
+              borderColor: 'var(--app-accent, #E0564C)',
+              color: 'var(--app-text-accent, #FECDD3)',
+            }}
+          >
+            <Mic className="w-3 h-3" style={{ color: 'var(--app-accent, #E0564C)' }} />
             <span className="text-[10px] font-bold tracking-wider">
               {t.agentX}
             </span>
             <div className="flex items-center gap-0.5 ml-1">
-              <span className="w-0.5 h-2 bg-purple-400 animate-pulse" />
-              <span className="w-0.5 h-3 bg-purple-300 animate-pulse delay-75" />
-              <span className="w-0.5 h-1.5 bg-purple-400 animate-pulse delay-150" />
+              <span
+                className="w-0.5 h-2 animate-pulse"
+                style={{ backgroundColor: 'var(--app-accent, #E0564C)' }}
+              />
+              <span
+                className="w-0.5 h-3 animate-pulse delay-75"
+                style={{ backgroundColor: 'var(--app-text-accent, #FFA494)' }}
+              />
+              <span
+                className="w-0.5 h-1.5 animate-pulse delay-150"
+                style={{ backgroundColor: 'var(--app-accent, #E0564C)' }}
+              />
             </div>
           </div>
 
           <span className="text-slate-400 text-[11px] font-normal truncate">
-            {t.lastAction}: <span className="text-cyan-300">{voiceState.lastAction}</span>
+            {t.lastAction}: <span className="font-bold" style={{ color: 'var(--app-text-accent, #FECDD3)' }}>{voiceState.lastAction}</span>
           </span>
         </div>
 
@@ -47,7 +69,13 @@ export const BottomCommandBar: React.FC = () => {
 
       {/* Global Prompt Input Box */}
       <form onSubmit={handleSubmit} className="flex items-center gap-2">
-        <div className="flex-1 bg-[#06080F] border border-[#232B40] focus-within:border-purple-500/80 rounded-xl px-3 py-1.5 flex items-center gap-2 transition-all shadow-inner">
+        <div
+          className="flex-1 border rounded-xl px-3 py-1.5 flex items-center gap-2 transition-all shadow-inner"
+          style={{
+            backgroundColor: 'var(--app-bg-dark, #06080F)',
+            borderColor: 'var(--app-border, #232B40)',
+          }}
+        >
           <input
             type="text"
             value={globalPrompt}
@@ -62,13 +90,14 @@ export const BottomCommandBar: React.FC = () => {
               setGlobalPrompt('build OAuth authentication with google and github, run vitest regression pack');
             }}
             title="Auto-fill prompt suggestion"
-            className="p-1 text-slate-500 hover:text-purple-400 transition-colors"
+            className="p-1 text-slate-500 hover:text-cyan-300 transition-colors"
           >
             <Wand2 className="w-3.5 h-3.5" />
           </button>
           <button
             type="submit"
-            className="p-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white transition-transform active:scale-95 shadow-md"
+            className="p-1.5 rounded-lg text-white transition-transform active:scale-95 shadow-md"
+            style={{ backgroundColor: 'var(--app-accent, #E0564C)' }}
           >
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
@@ -82,7 +111,7 @@ export const BottomCommandBar: React.FC = () => {
           <span>|</span>
           <button
             onClick={handlePlayAgain}
-            className="text-slate-400 hover:text-purple-300 transition-colors flex items-center gap-1 font-bold"
+            className="text-slate-400 hover:text-cyan-300 transition-colors flex items-center gap-1 font-bold"
           >
             <Play className="w-2.5 h-2.5 fill-current" />
             <span>{t.playAgain}</span>

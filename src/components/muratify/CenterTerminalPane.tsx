@@ -66,20 +66,36 @@ export const CenterTerminalPane: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-[#0A0C13] border-r border-[#1E2333] overflow-hidden select-none min-w-0">
+    <div
+      className="flex-1 flex flex-col border-r overflow-hidden select-none min-w-0 transition-colors duration-300"
+      style={{
+        backgroundColor: 'var(--app-bg-dark, #0A0C13)',
+        borderColor: 'var(--app-border, #1E2333)',
+      }}
+    >
       {/* Center Sub-Header Tabs */}
-      <div className="h-8 bg-[#141824] border-b border-[#1E2333] px-3 flex items-center justify-between text-xs font-mono text-slate-400 shrink-0">
+      <div
+        className="h-8 border-b px-3 flex items-center justify-between text-xs font-mono text-slate-400 shrink-0 transition-colors duration-300"
+        style={{
+          backgroundColor: 'var(--app-bg-panel, #141824)',
+          borderColor: 'var(--app-border, #1E2333)',
+        }}
+      >
         <div className="flex items-center gap-4">
           <button
             onClick={() => {
               sound.playClick();
               setCenterTab('terminal');
             }}
-            className={`flex items-center gap-2 font-bold transition-colors ${
-              centerTab === 'terminal' ? 'text-cyan-300' : 'text-slate-500 hover:text-slate-300'
-            }`}
+            className="flex items-center gap-2 font-bold transition-colors"
+            style={{
+              color: centerTab === 'terminal' ? 'var(--app-text-accent, #FECDD3)' : '#64748B',
+            }}
           >
-            <span className="w-2 h-2 rounded-full bg-cyan-400" />
+            <span
+              className="w-2 h-2 rounded-full"
+              style={{ backgroundColor: 'var(--app-accent, #E0564C)' }}
+            />
             <span>{t.terminals}</span>
             <span className="text-[10px] text-slate-500 font-normal">
               {terminalPanes.length} {t.terminalSub}
@@ -91,9 +107,10 @@ export const CenterTerminalPane: React.FC = () => {
               sound.playClick();
               setCenterTab('code');
             }}
-            className={`flex items-center gap-1.5 transition-colors ${
-              centerTab === 'code' ? 'text-cyan-300 font-bold' : 'text-slate-500 hover:text-slate-300'
-            }`}
+            className="flex items-center gap-1.5 transition-colors"
+            style={{
+              color: centerTab === 'code' ? 'var(--app-text-accent, #FECDD3)' : '#64748B',
+            }}
           >
             <FileCode className="w-3.5 h-3.5" />
             <span>{t.codeWorkspace}</span>
@@ -104,7 +121,12 @@ export const CenterTerminalPane: React.FC = () => {
           <button
             onClick={addTerminalPane}
             title={t.newShell}
-            className="flex items-center gap-1 px-2 py-0.5 rounded bg-[#1A2133] hover:bg-[#25304B] text-[10px] text-cyan-300 border border-[#2E3C5C] transition-colors"
+            className="flex items-center gap-1 px-2 py-0.5 rounded text-[10px] border transition-colors"
+            style={{
+              backgroundColor: 'var(--app-bg-surface, #1A2133)',
+              borderColor: 'var(--app-border, #2E3C5C)',
+              color: 'var(--app-text-accent, #FECDD3)',
+            }}
           >
             <Plus className="w-3 h-3" />
             <span>{t.newShell}</span>
@@ -120,14 +142,31 @@ export const CenterTerminalPane: React.FC = () => {
             {terminalPanes.slice(0, 2).map((pane) => (
               <div
                 key={pane.id}
-                className="bg-[#06080F] border border-[#1C2234] rounded-lg flex flex-col justify-between overflow-hidden shadow-lg"
+                className="border rounded-lg flex flex-col justify-between overflow-hidden shadow-lg transition-colors duration-300"
+                style={{
+                  backgroundColor: 'var(--app-terminal-bg, #06080F)',
+                  borderColor: 'var(--app-border, #1C2234)',
+                }}
               >
                 {/* Title Bar */}
-                <div className="h-7 bg-[#0F131E] border-b border-[#1A2030] px-2.5 flex items-center justify-between text-[11px] font-mono">
+                <div
+                  className="h-7 border-b px-2.5 flex items-center justify-between text-[11px] font-mono transition-colors duration-300"
+                  style={{
+                    backgroundColor: 'var(--app-terminal-header, #0F131E)',
+                    borderColor: 'var(--app-border, #1A2030)',
+                  }}
+                >
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-xs bg-emerald-400" />
                     <span className="font-bold text-slate-200">{pane.taskId}</span>
-                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyan-950/60 text-cyan-300 border border-cyan-500/30">
+                    <span
+                      className="text-[9px] px-1.5 py-0.2 rounded font-bold border"
+                      style={{
+                        backgroundColor: 'var(--app-badge-bg, rgba(224, 86, 76, 0.2))',
+                        borderColor: 'var(--app-border, #E0564C)',
+                        color: 'var(--app-text-accent, #FECDD3)',
+                      }}
+                    >
                       {pane.model}
                     </span>
                   </div>
@@ -156,7 +195,7 @@ export const CenterTerminalPane: React.FC = () => {
                       {line.startsWith('$') ? (
                         <span className="text-slate-200 font-bold">{line}</span>
                       ) : line.startsWith('▸') ? (
-                        <span className="text-purple-400 font-semibold">{line}</span>
+                        <span style={{ color: 'var(--app-accent, #E0564C)' }} className="font-semibold">{line}</span>
                       ) : line.startsWith('●') ? (
                         <span className="text-cyan-400 font-bold">{line}</span>
                       ) : line.startsWith('+') ? (
@@ -166,18 +205,25 @@ export const CenterTerminalPane: React.FC = () => {
                       )}
                     </div>
                   ))}
-                  <div className="flex items-center gap-1 text-cyan-400 font-bold">
+                  <div className="flex items-center gap-1 font-bold" style={{ color: 'var(--app-text-accent, #FECDD3)' }}>
                     <span>{t.reading} {pane.currentFile}</span>
-                    <span className="w-1.5 h-3 bg-cyan-400 animate-pulse inline-block" />
+                    <span
+                      className="w-1.5 h-3 animate-pulse inline-block"
+                      style={{ backgroundColor: 'var(--app-accent, #E0564C)' }}
+                    />
                   </div>
                 </div>
 
                 {/* CLI Input Prompt */}
                 <form
                   onSubmit={(e) => handleRunCommandInPane(e, pane.id)}
-                  className="h-7 bg-[#0C0F17] border-t border-[#181E2E] px-2 flex items-center gap-1.5"
+                  className="h-7 border-t px-2 flex items-center gap-1.5 transition-colors duration-300"
+                  style={{
+                    backgroundColor: 'var(--app-bg-dark, #0C0F17)',
+                    borderColor: 'var(--app-border, #181E2E)',
+                  }}
                 >
-                  <span className="text-cyan-400 font-bold text-[11px]">$</span>
+                  <span style={{ color: 'var(--app-accent, #E0564C)' }} className="font-bold text-[11px]">$</span>
                   <input
                     type="text"
                     value={inputCommands[pane.id] || ''}
@@ -194,12 +240,31 @@ export const CenterTerminalPane: React.FC = () => {
 
           {/* Bottom Wide Terminal: 3rd Terminal */}
           {terminalPanes[2] && (
-            <div className="bg-[#06080F] border border-[#1C2234] rounded-lg flex flex-col justify-between overflow-hidden shadow-lg h-44">
-              <div className="h-7 bg-[#0F131E] border-b border-[#1A2030] px-2.5 flex items-center justify-between text-[11px] font-mono">
+            <div
+              className="border rounded-lg flex flex-col justify-between overflow-hidden shadow-lg h-44 transition-colors duration-300"
+              style={{
+                backgroundColor: 'var(--app-terminal-bg, #06080F)',
+                borderColor: 'var(--app-border, #1C2234)',
+              }}
+            >
+              <div
+                className="h-7 border-b px-2.5 flex items-center justify-between text-[11px] font-mono transition-colors duration-300"
+                style={{
+                  backgroundColor: 'var(--app-terminal-header, #0F131E)',
+                  borderColor: 'var(--app-border, #1A2030)',
+                }}
+              >
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-xs bg-emerald-400" />
                   <span className="font-bold text-slate-200">{terminalPanes[2].agentName}</span>
-                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-blue-950/60 text-blue-300 border border-blue-500/30">
+                  <span
+                    className="text-[9px] px-1.5 py-0.2 rounded font-bold border"
+                    style={{
+                      backgroundColor: 'var(--app-badge-bg, rgba(224, 86, 76, 0.2))',
+                      borderColor: 'var(--app-border, #E0564C)',
+                      color: 'var(--app-text-accent, #FECDD3)',
+                    }}
+                  >
                     {terminalPanes[2].model}
                   </span>
                 </div>
@@ -225,7 +290,7 @@ export const CenterTerminalPane: React.FC = () => {
                     {line.startsWith('$') ? (
                       <span className="text-slate-200 font-bold">{line}</span>
                     ) : line.startsWith('▸') ? (
-                      <span className="text-purple-400 font-semibold">{line}</span>
+                      <span style={{ color: 'var(--app-accent, #E0564C)' }} className="font-semibold">{line}</span>
                     ) : line.startsWith('●') ? (
                       <span className="text-cyan-400 font-bold">{line}</span>
                     ) : line.startsWith('+') ? (
@@ -243,9 +308,13 @@ export const CenterTerminalPane: React.FC = () => {
 
               <form
                 onSubmit={(e) => handleRunCommandInPane(e, terminalPanes[2].id)}
-                className="h-7 bg-[#0C0F17] border-t border-[#181E2E] px-2 flex items-center gap-1.5"
+                className="h-7 border-t px-2 flex items-center gap-1.5 transition-colors duration-300"
+                style={{
+                  backgroundColor: 'var(--app-bg-dark, #0C0F17)',
+                  borderColor: 'var(--app-border, #181E2E)',
+                }}
               >
-                <span className="text-emerald-400 font-bold text-[11px]">$</span>
+                <span style={{ color: 'var(--app-accent, #E0564C)' }} className="font-bold text-[11px]">$</span>
                 <input
                   type="text"
                   value={inputCommands[terminalPanes[2].id] || ''}
@@ -261,9 +330,18 @@ export const CenterTerminalPane: React.FC = () => {
         </div>
       ) : (
         /* Code Workspace Mode */
-        <div className="flex-1 flex flex-col min-h-0 bg-[#070910]">
+        <div
+          className="flex-1 flex flex-col min-h-0 transition-colors duration-300"
+          style={{ backgroundColor: 'var(--app-bg-dark, #070910)' }}
+        >
           {/* File Tabs */}
-          <div className="h-8 bg-[#0E111A] border-b border-[#1E2436] px-2 flex items-center justify-between text-xs font-mono">
+          <div
+            className="h-8 border-b px-2 flex items-center justify-between text-xs font-mono transition-colors duration-300"
+            style={{
+              backgroundColor: 'var(--app-bg-panel, #0E111A)',
+              borderColor: 'var(--app-border, #1E2436)',
+            }}
+          >
             <div className="flex items-center gap-1 overflow-x-auto">
               {codeFiles.map((file) => {
                 const isSelected = selectedFileId === file.id;
@@ -271,11 +349,13 @@ export const CenterTerminalPane: React.FC = () => {
                   <button
                     key={file.id}
                     onClick={() => handleSelectFile(file.id)}
-                    className={`flex items-center gap-1.5 px-3 py-1 rounded-t-md text-xs font-mono transition-all ${
-                      isSelected
-                        ? 'bg-[#151926] text-cyan-300 border-t-2 border-cyan-400 font-bold'
-                        : 'text-slate-400 hover:bg-[#121622] hover:text-slate-200'
-                    }`}
+                    className="flex items-center gap-1.5 px-3 py-1 rounded-t-md text-xs font-mono transition-all"
+                    style={{
+                      backgroundColor: isSelected ? 'var(--app-bg-surface, #151926)' : 'transparent',
+                      color: isSelected ? 'var(--app-text-accent, #FECDD3)' : '#94A3B8',
+                      borderTop: isSelected ? '2px solid var(--app-accent, #E0564C)' : 'none',
+                      fontWeight: isSelected ? 'bold' : 'normal',
+                    }}
                   >
                     <FileCode className="w-3.5 h-3.5" />
                     <span>{file.name}</span>
@@ -286,7 +366,12 @@ export const CenterTerminalPane: React.FC = () => {
 
             <button
               onClick={handleSaveFile}
-              className="flex items-center gap-1 px-2.5 py-1 rounded bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 text-[10px] font-bold"
+              className="flex items-center gap-1 px-2.5 py-1 rounded text-[10px] font-bold border transition-colors"
+              style={{
+                backgroundColor: 'var(--app-badge-bg, rgba(224, 86, 76, 0.2))',
+                borderColor: 'var(--app-accent, #E0564C)',
+                color: 'var(--app-text-accent, #FECDD3)',
+              }}
             >
               {isSaved ? <Check className="w-3 h-3 text-emerald-400" /> : <Save className="w-3 h-3" />}
               <span>{isSaved ? t.saved : t.saveFile}</span>
@@ -295,7 +380,13 @@ export const CenterTerminalPane: React.FC = () => {
 
           {/* Editor Body */}
           <div className="flex-1 flex overflow-hidden">
-            <div className="w-10 bg-[#0A0C13] border-r border-[#1C2234] py-2 pr-2 select-none text-right text-[11px] font-mono text-slate-600 space-y-0.5">
+            <div
+              className="w-10 border-r py-2 pr-2 select-none text-right text-[11px] font-mono text-slate-600 space-y-0.5"
+              style={{
+                backgroundColor: 'var(--app-bg-dark, #0A0C13)',
+                borderColor: 'var(--app-border, #1C2234)',
+              }}
+            >
               {editorText.split('\n').map((_, idx) => (
                 <div key={idx} className="h-5 leading-5">
                   {idx + 1}
@@ -306,7 +397,7 @@ export const CenterTerminalPane: React.FC = () => {
             <textarea
               value={editorText}
               onChange={(e) => setEditorText(e.target.value)}
-              className="flex-1 bg-transparent p-2 text-xs font-mono text-slate-200 outline-none resize-none leading-5 selection:bg-cyan-500/30 overflow-y-auto whitespace-pre font-normal"
+              className="flex-1 bg-transparent p-2 text-xs font-mono text-slate-200 outline-none resize-none leading-5 overflow-y-auto whitespace-pre font-normal"
               spellCheck={false}
             />
           </div>
