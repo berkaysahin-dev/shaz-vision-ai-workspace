@@ -1,211 +1,159 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Search, Terminal, CheckSquare, Users, Globe, FileCode, Play, Sparkles, X, Plus } from 'lucide-react';
+import React, { useState } from 'react';
+import { Search, X, Terminal, Users, CheckSquare, FileCode, ArrowRight } from 'lucide-react';
 import { useWorkspace } from '../../context/WorkspaceContext';
-import { AgentId } from '../../types';
 import { sound } from '../../services/soundEngine';
 
 export const SearchModal: React.FC = () => {
-  const {
-    isSearchOpen,
-    setIsSearchOpen,
-    setSelectedAgentId,
-    setCenterTab,
-    setRightTab,
-    executeGlobalPrompt,
-    setIsTaskModalOpen,
-    setIsSettingsOpen,
-    addTerminalPane,
-  } = useWorkspace();
-
+  const { isSearchOpen, setIsSearchOpen, agents, tasks, codeFiles, setSelectedAgentId, setCenterTab, setRightTab, language } = useWorkspace();
   const [query, setQuery] = useState('');
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (isSearchOpen) {
-      setQuery('');
-      setSelectedIndex(0);
-      setTimeout(() => inputRef.current?.focus(), 50);
-    }
-  }, [isSearchOpen]);
 
   if (!isSearchOpen) return null;
 
-  interface Item {
-    id: string;
-    title: string;
-    sub: string;
-    cat: string;
-    icon: React.FC<{ className?: string }>;
-    action: () => void;
-  }
-
-  const items: Item[] = [
-    {
-      id: 'cmd-prompt',
-      title: 'Run AI Company Sprint',
-      sub: 'Dispatch global prompt across the crew',
-      cat: 'Actions',
-      icon: Play,
-      action: () => executeGlobalPrompt('refresh the landing page, spread it across the crew'),
-    },
-    {
-      id: 'cmd-new-task',
-      title: 'Create New Task',
-      sub: 'Add task to Kanban board with agent assignment',
-      cat: 'Actions',
-      icon: Plus,
-      action: () => setIsTaskModalOpen(true),
-    },
-    {
-      id: 'cmd-term',
-      title: 'Spawn New Live Terminal',
-      sub: 'Open parallel agent CLI shell',
-      cat: 'Terminal',
-      icon: Terminal,
-      action: () => addTerminalPane(),
-    },
-    {
-      id: 'cmd-browser',
-      title: 'Open In-App Headless Browser',
-      sub: 'View live responsive DOM preview',
-      cat: 'Tools',
-      icon: Globe,
-      action: () => setRightTab('browser'),
-    },
-    {
-      id: 'cmd-code',
-      title: 'Open Code Explorer & Editor',
-      sub: 'Inspect agent source code modifications',
-      cat: 'Code',
-      icon: FileCode,
-      action: () => setCenterTab('code'),
-    },
-    {
-      id: 'agent-nova',
-      title: 'Focus Agent: Nova (Backend Eng)',
-      sub: 'TASK-CH23757 · gpt-5-codex',
-      cat: 'Agents',
-      icon: Users,
-      action: () => setSelectedAgentId('nova'),
-    },
-    {
-      id: 'agent-emre',
-      title: 'Focus Agent: Emre (Fullstack Eng)',
-      sub: 'TASK-CH15038 · Fable 5',
-      cat: 'Agents',
-      icon: Users,
-      action: () => setSelectedAgentId('emre'),
-    },
-    {
-      id: 'agent-kai',
-      title: 'Focus Agent: Kai (Frontend Eng)',
-      sub: 'TASK-CH88491 · Fable 5',
-      cat: 'Agents',
-      icon: Users,
-      action: () => setSelectedAgentId('kai'),
-    },
-  ];
-
-  const filtered = items.filter(
-    (i) =>
-      i.title.toLowerCase().includes(query.toLowerCase()) ||
-      i.sub.toLowerCase().includes(query.toLowerCase()) ||
-      i.cat.toLowerCase().includes(query.toLowerCase())
-  );
-
-  const handleSelect = (item: Item) => {
+  const handleClose = () => {
     sound.playClick();
     setIsSearchOpen(false);
-    item.action();
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      setSelectedIndex((p) => (p + 1) % (filtered.length || 1));
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      setSelectedIndex((p) => (p - 1 + filtered.length) % (filtered.length || 1));
-    } else if (e.key === 'Enter') {
-      e.preventDefault();
-      if (filtered[selectedIndex]) handleSelect(filtered[selectedIndex]);
-    } else if (e.key === 'Escape') {
-      setIsSearchOpen(false);
-    }
+  const handleSelectAgent = (agentId: string) => {
+    sound.playClick();
+    setSelectedAgentId(agentId as any);
+    setIsSearchOpen(false);
+  };
+
+  const handleSelectTask = () => {
+    sound.playClick();
+    setRightTab('tasks');
+    setIsSearchOpen(false);
+  };
+
+  const handleSelectCode = () => {
+    sound.playClick();
+    setCenterTab('code');
+    setIsSearchOpen(false);
   };
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-start justify-center pt-24 p-4 font-mono select-none"
-      onClick={() => setIsSearchOpen(false)}
+      className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-start justify-center pt-20 p-4 select-none font-mono"
+      onClick={handleClose}
     >
       <div
-        className="w-full max-w-xl bg-[#0F121C] border border-[#262E44] rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[70vh]"
+        className="w-full max-w-xl border rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-150 text-slate-300"
+        style={{
+          backgroundColor: 'var(--app-bg-panel, #0E1119)',
+          borderColor: 'var(--app-border, #222736)',
+        }}
         onClick={(e) => e.stopPropagation()}
-        onKeyDown={handleKeyDown}
       >
-        {/* Input */}
-        <div className="p-3.5 bg-[#141824] border-b border-[#21283B] flex items-center gap-3">
-          <Search className="w-4 h-4 text-purple-400 shrink-0" />
+        {/* Search Input Bar */}
+        <div
+          className="h-12 border-b px-4 flex items-center gap-3 shrink-0"
+          style={{ borderColor: 'var(--app-border, #1E2333)' }}
+        >
+          <Search className="w-4 h-4 text-slate-400" />
           <input
-            ref={inputRef}
             type="text"
+            autoFocus
             value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setSelectedIndex(0);
-            }}
-            placeholder="Search agents, tasks, terminals, files, or actions..."
-            className="flex-1 bg-transparent text-xs text-slate-100 placeholder-slate-500 outline-none font-mono"
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={language === 'tr' ? 'Ajan, görev, dosya veya komut arayın (⌘K)...' : 'Search agents, tasks, files or commands (⌘K)...'}
+            className="flex-1 bg-transparent text-sm text-slate-100 placeholder-slate-500 outline-none"
           />
-          <kbd className="text-[10px] px-1.5 py-0.5 rounded bg-[#0A0D15] text-slate-400 border border-[#232B3F]">
-            ESC
-          </kbd>
+          <button onClick={handleClose} className="p-1 text-slate-400 hover:text-slate-200">
+            <X className="w-4 h-4" />
+          </button>
         </div>
 
-        {/* Results */}
-        <div className="p-2 overflow-y-auto space-y-1 flex-1">
-          {filtered.length === 0 ? (
-            <div className="p-8 text-center text-xs text-slate-500">
-              No matching commands or agents found.
+        {/* Search Results List */}
+        <div className="p-3 space-y-3 max-h-96 overflow-y-auto text-xs">
+          {/* Section: Agents */}
+          <div className="space-y-1">
+            <div className="text-[9px] font-bold uppercase px-2 py-0.5 tracking-wider" style={{ color: 'var(--app-accent, #E0564C)' }}>
+              {language === 'tr' ? 'Ajanlar' : 'Agents'}
             </div>
-          ) : (
-            filtered.map((item, idx) => {
-              const Icon = item.icon;
-              const isSelected = idx === selectedIndex;
-              return (
+            {Object.values(agents)
+              .filter((a) => a.name.toLowerCase().includes(query.toLowerCase()) || a.role.toLowerCase().includes(query.toLowerCase()))
+              .map((agent) => (
                 <div
-                  key={item.id}
-                  onClick={() => handleSelect(item)}
-                  onMouseEnter={() => setSelectedIndex(idx)}
-                  className={`flex items-center justify-between p-2.5 rounded-xl cursor-pointer transition-all ${
-                    isSelected
-                      ? 'bg-purple-900/40 border border-purple-500/50 text-purple-200 shadow-sm'
-                      : 'hover:bg-[#151A28] text-slate-300 border border-transparent'
-                  }`}
+                  key={agent.id}
+                  onClick={() => handleSelectAgent(agent.id)}
+                  className="p-2 rounded-lg border hover:border-cyan-500/40 flex items-center justify-between cursor-pointer transition-colors"
+                  style={{
+                    backgroundColor: 'var(--app-bg-surface, #141824)',
+                    borderColor: 'var(--app-border, #1E2538)',
+                  }}
                 >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="p-1.5 rounded-lg bg-[#0A0D14] border border-[#232B40] text-purple-400">
-                      <Icon className="w-4 h-4" />
-                    </div>
-                    <div className="truncate">
-                      <div className="text-xs font-bold truncate">{item.title}</div>
-                      <div className="text-[10px] text-slate-400 truncate">{item.sub}</div>
-                    </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: agent.color }} />
+                    <span className="font-bold text-slate-100">{agent.name}</span>
+                    <span className="text-slate-400 text-[11px]">— {agent.role}</span>
                   </div>
-                  <span className="text-[9px] uppercase px-1.5 py-0.5 rounded bg-[#0A0D14] text-slate-500 border border-[#1E2536]">
-                    {item.cat}
-                  </span>
+                  <span className="text-[10px] text-cyan-300 font-bold">{agent.model}</span>
                 </div>
-              );
-            })
-          )}
+              ))}
+          </div>
+
+          {/* Section: Tasks */}
+          <div className="space-y-1">
+            <div className="text-[9px] font-bold text-amber-400 uppercase px-2 py-0.5 tracking-wider">
+              {language === 'tr' ? 'Görevler (Kanban)' : 'Tasks'}
+            </div>
+            {tasks.slice(0, 3).map((task) => (
+              <div
+                key={task.id}
+                onClick={handleSelectTask}
+                className="p-2 rounded-lg border hover:border-amber-500/40 flex items-center justify-between cursor-pointer transition-colors"
+                style={{
+                  backgroundColor: 'var(--app-bg-surface, #141824)',
+                  borderColor: 'var(--app-border, #1E2538)',
+                }}
+              >
+                <div className="flex items-center gap-2">
+                  <CheckSquare className="w-3.5 h-3.5 text-amber-400" />
+                  <span className="text-slate-200">{task.title}</span>
+                </div>
+                <span className="text-[9px] px-1.5 py-0.2 rounded bg-black/40 text-amber-300 font-bold border border-amber-500/30">
+                  {task.status}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Section: Files */}
+          <div className="space-y-1">
+            <div className="text-[9px] font-bold text-cyan-400 uppercase px-2 py-0.5 tracking-wider">
+              {language === 'tr' ? 'Kod Dosyaları' : 'Code Files'}
+            </div>
+            {codeFiles.map((file) => (
+              <div
+                key={file.id}
+                onClick={handleSelectCode}
+                className="p-2 rounded-lg border hover:border-cyan-500/40 flex items-center justify-between cursor-pointer transition-colors"
+                style={{
+                  backgroundColor: 'var(--app-bg-surface, #141824)',
+                  borderColor: 'var(--app-border, #1E2538)',
+                }}
+              >
+                <div className="flex items-center gap-2">
+                  <FileCode className="w-3.5 h-3.5 text-cyan-400" />
+                  <span className="text-slate-200">{file.name}</span>
+                </div>
+                <span className="text-[10px] text-slate-500">{file.language}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className="p-2 px-3 border-t border-[#1C2234] bg-[#0A0D14] text-[10px] text-slate-500 flex justify-between">
-          <span>Navigate with ↑ ↓ and Enter</span>
-          <span>Shaz Vision AI Workspace</span>
+        {/* Footer info */}
+        <div
+          className="h-9 border-t px-4 flex items-center justify-between text-[10px] text-slate-500 shrink-0"
+          style={{
+            backgroundColor: 'var(--app-bg-dark, #0A0C13)',
+            borderColor: 'var(--app-border, #1E2333)',
+          }}
+        >
+          <span>{language === 'tr' ? 'Geçiş için ↑↓ ok tuşları, seçim için Enter' : 'Navigate with ↑↓, Select with Enter'}</span>
+          <kbd className="px-1.5 py-0.5 rounded bg-black/40 border border-slate-700 text-slate-400">Esc</kbd>
         </div>
       </div>
     </div>

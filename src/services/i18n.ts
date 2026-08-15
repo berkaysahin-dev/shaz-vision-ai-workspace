@@ -41,11 +41,11 @@ export const translations = {
     liveHQ: 'Product HQ Canlı — Shaz Vision AI Workspace',
     speechDefault: 'görev panoya eklendi ve ekibe dağıtıldı.',
     
-    // Center Pane & Terminals
+    // Center Pane & Terminals (Universal Developer Terminology preserved)
     terminals: 'Terminaller',
-    terminalSub: '3 ajanlı kabuk',
+    terminalSub: '3 ajanlı terminal',
     codeWorkspace: 'Kod Çalışma Alanı',
-    newShell: 'Yeni Kabuk',
+    newShell: 'New Shell',
     reading: 'okunuyor',
     saved: 'Kaydedildi',
     saveFile: 'Dosyayı Kaydet',
@@ -67,12 +67,12 @@ export const translations = {
     clickToMove: 'İlerletmek için tıkla →',
     
     // Browser
-    liveDom: 'Canlı DOM',
-    toolCalls: 'Araç Çağrıları',
-    devtools: 'DevTools Konsolu',
+    liveDom: 'Live DOM',
+    toolCalls: 'Tool Calls',
+    devtools: 'DevTools',
     status: 'Durum',
     viewport: 'Görünüm',
-    browserSubtitle: 'Otonom başsız DOM doğrulandı',
+    browserSubtitle: 'Autonomous headless DOM verified',
     
     // Inspector
     inspectorTitle: 'Ajan Denetçisi',
@@ -81,8 +81,8 @@ export const translations = {
     cost: 'TOPLAM MALİYET',
     runtime: 'ÇALIŞMA SÜRESİ',
     filesAccessed: 'ERİŞİLEN PROJE DOSYALARI',
-    liveCli: 'CANLI AJAN CLI AKIŞI',
-    streaming: 'Canlı Akış',
+    liveCli: 'LIVE AGENT CLI',
+    streaming: 'Streaming',
     pauseAgent: 'Ajanı Duraklat',
     resumeAgent: 'Ajanı Devam Ettir',
     messagePlaceholder: 'Ajana doğrudan talimat yazın...',
@@ -167,7 +167,7 @@ export const translations = {
     
     // Center Pane & Terminals
     terminals: 'Terminals',
-    terminalSub: '3 paneagent shell',
+    terminalSub: '3-pane terminal grid',
     codeWorkspace: 'Code Workspace',
     newShell: 'New Shell',
     reading: 'reading',
@@ -193,7 +193,7 @@ export const translations = {
     // Browser
     liveDom: 'Live DOM',
     toolCalls: 'Tool Calls',
-    devtools: 'DevTools Console',
+    devtools: 'DevTools',
     status: 'Status',
     viewport: 'Viewport',
     browserSubtitle: 'Autonomous headless DOM verified',

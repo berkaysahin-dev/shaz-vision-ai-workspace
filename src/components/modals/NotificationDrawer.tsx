@@ -1,43 +1,82 @@
 import React from 'react';
-import { Bell, Check, GitPullRequest, CheckCircle2, AlertTriangle, Info, X } from 'lucide-react';
+import { X, CheckCheck, Bell, AlertTriangle, CheckCircle2, Info, Activity } from 'lucide-react';
 import { useWorkspace } from '../../context/WorkspaceContext';
 import { sound } from '../../services/soundEngine';
 
 export const NotificationDrawer: React.FC = () => {
-  const { notifications, isNotificationOpen, setIsNotificationOpen, markNotificationsAsRead } = useWorkspace();
+  const {
+    isNotificationOpen,
+    setIsNotificationOpen,
+    notifications,
+    markNotificationsAsRead,
+    language,
+  } = useWorkspace();
 
   if (!isNotificationOpen) return null;
 
+  const handleMarkAllRead = () => {
+    sound.playSuccess();
+    markNotificationsAsRead();
+  };
+
   const getIcon = (type: string) => {
     switch (type) {
-      case 'pr': return <GitPullRequest className="w-4 h-4 text-purple-400" />;
-      case 'success': return <CheckCircle2 className="w-4 h-4 text-emerald-400" />;
-      case 'warning': return <AlertTriangle className="w-4 h-4 text-amber-400" />;
-      default: return <Info className="w-4 h-4 text-cyan-400" />;
+      case 'success':
+        return <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />;
+      case 'warning':
+        return <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />;
+      case 'action':
+        return <Activity className="w-4 h-4 text-cyan-400 shrink-0" />;
+      default:
+        return <Info className="w-4 h-4 text-blue-400 shrink-0" />;
     }
   };
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex justify-end"
+      className="fixed inset-0 z-50 bg-black/65 backdrop-blur-xs flex items-center justify-end font-mono select-none"
       onClick={() => setIsNotificationOpen(false)}
     >
       <div
-        className="w-80 md:w-96 bg-[#10131E] border-l border-[#242C42] shadow-2xl h-full flex flex-col justify-between p-4 font-mono select-none animate-in slide-in-from-right duration-200"
+        className="w-full max-w-sm border-l shadow-2xl h-full flex flex-col justify-between p-4 overflow-y-auto animate-in slide-in-from-right duration-200 transition-colors"
+        style={{
+          backgroundColor: 'var(--app-bg-panel, #0F121C)',
+          borderColor: 'var(--app-border, #242D44)',
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div>
-          <div className="flex items-center justify-between pb-3 border-b border-[#1E263B]">
+          <div
+            className="flex items-center justify-between pb-3 border-b"
+            style={{ borderColor: 'var(--app-border, #1F273D)' }}
+          >
             <div className="flex items-center gap-2">
-              <Bell className="w-4 h-4 text-purple-400" />
-              <span className="font-bold text-sm text-slate-100 uppercase tracking-wider">
-                Notifications
+              <div
+                className="p-1 rounded border"
+                style={{
+                  backgroundColor: 'var(--app-badge-bg, rgba(224, 86, 76, 0.2))',
+                  borderColor: 'var(--app-accent, #E0564C)',
+                  color: 'var(--app-text-accent, #FECDD3)',
+                }}
+              >
+                <Bell className="w-3.5 h-3.5" />
+              </div>
+              <span className="font-bold text-sm text-slate-100">
+                {language === 'tr' ? 'Bildirimler' : 'Notifications'}
               </span>
-              <span className="text-[10px] px-1.5 py-0.2 rounded bg-purple-950 text-purple-300 border border-purple-500/40 font-bold">
-                {notifications.filter((n) => !n.read).length} new
+              <span
+                className="text-[9px] px-1.5 py-0.2 rounded font-bold border"
+                style={{
+                  backgroundColor: 'var(--app-badge-bg, rgba(224, 86, 76, 0.2))',
+                  borderColor: 'var(--app-accent, #E0564C)',
+                  color: 'var(--app-text-accent, #FECDD3)',
+                }}
+              >
+                {notifications.filter((n) => !n.read).length}
               </span>
             </div>
+
             <button
               onClick={() => setIsNotificationOpen(false)}
               className="p-1 rounded text-slate-400 hover:text-slate-200"
@@ -46,51 +85,53 @@ export const NotificationDrawer: React.FC = () => {
             </button>
           </div>
 
-          <div className="flex justify-between items-center py-2 text-[10px] text-slate-400">
-            <span>LIVE AGENT ACTIVITY</span>
-            <button
-              onClick={markNotificationsAsRead}
-              className="text-cyan-400 hover:text-cyan-300 font-bold"
-            >
-              Mark all as read
-            </button>
-          </div>
-
-          {/* List */}
-          <div className="space-y-2.5 mt-2 overflow-y-auto max-h-[75vh] pr-1">
-            {notifications.map((item) => (
+          {/* List of alerts */}
+          <div className="space-y-2.5 mt-3.5">
+            {notifications.map((notif) => (
               <div
-                key={item.id}
-                className={`p-3 rounded-xl border transition-all ${
-                  !item.read
-                    ? 'bg-[#141928] border-purple-500/40 shadow-sm'
-                    : 'bg-[#0B0D15] border-[#1C2336] text-slate-400'
-                }`}
+                key={notif.id}
+                className="p-3 rounded-xl border space-y-1.5 transition-all shadow-sm"
+                style={{
+                  backgroundColor: notif.read ? 'var(--app-bg-dark, #090B12)' : 'var(--app-bg-surface, #141724)',
+                  borderColor: notif.read ? 'var(--app-border, #1A2133)' : 'var(--app-accent, #E0564C)',
+                }}
               >
-                <div className="flex items-start gap-2.5">
-                  <div className="p-1 rounded bg-[#0A0D15] border border-[#232B40] mt-0.5">
-                    {getIcon(item.type)}
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-2">
+                    {getIcon(notif.type)}
+                    <span className="font-bold text-slate-100">{notif.title}</span>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-xs font-bold text-slate-200 truncate">
-                      {item.title}
-                    </div>
-                    <div className="text-[11px] text-slate-400 mt-1 leading-relaxed">
-                      {item.message}
-                    </div>
-                    <div className="text-[9px] text-slate-500 mt-1.5 font-mono">
-                      {item.timestamp}
-                    </div>
-                  </div>
+                  <span className="text-[9px] text-slate-500">{notif.timestamp}</span>
+                </div>
+
+                <div className="text-[11px] text-slate-400 leading-normal pl-6">
+                  {notif.message}
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="pt-3 border-t border-[#1E263B] text-center text-[10px] text-slate-500">
-          Shaz Vision AI Telemetry Daemon
+        {/* Footer actions */}
+        <div
+          className="pt-3 border-t flex items-center justify-between"
+          style={{ borderColor: 'var(--app-border, #1F273D)' }}
+        >
+          <button
+            onClick={handleMarkAllRead}
+            className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
+          >
+            <CheckCheck className="w-3.5 h-3.5" />
+            <span>{language === 'tr' ? 'Tümünü okundu say' : 'Mark all as read'}</span>
+          </button>
+
+          <button
+            onClick={() => setIsNotificationOpen(false)}
+            className="px-3 py-1.5 rounded-lg text-white text-xs font-bold transition-all shadow-md active:scale-95"
+            style={{ backgroundColor: 'var(--app-accent, #E0564C)' }}
+          >
+            {language === 'tr' ? 'Kapat' : 'Close'}
+          </button>
         </div>
       </div>
     </div>
