@@ -28,7 +28,7 @@ import {
 } from '../services/mockData';
 import { sound } from '../services/soundEngine';
 import { Language, translations } from '../services/i18n';
-import { ThemeId, THEMES } from '../services/themeManager';
+import { ThemeId, THEMES, applyThemeToDOM } from '../services/themeManager';
 
 interface WorkspaceContextType {
   language: Language;
@@ -101,7 +101,7 @@ const WorkspaceContext = createContext<WorkspaceContextType | undefined>(undefin
 
 export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<Language>('tr');
-  const [currentTheme, setCurrentThemeState] = useState<ThemeId>('espresso'); // Default to Espresso as featured in user screenshot
+  const [currentTheme, setCurrentThemeState] = useState<ThemeId>('espresso');
   const [activeTeam, setActiveTeamState] = useState<TeamId>('PRODUCT');
   const [mainView, setMainViewState] = useState<MainViewTab>('office');
   const [agents, setAgents] = useState<Record<string, Agent>>(initialAgents);
@@ -128,6 +128,11 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [globalPrompt, setGlobalPrompt] = useState('refresh the landing page, spread it across the crew');
   const [isSoundMuted, setIsSoundMuted] = useState(false);
 
+  // Apply theme immediately on startup and changes
+  useEffect(() => {
+    applyThemeToDOM(currentTheme);
+  }, [currentTheme]);
+
   const setLanguage = (lang: Language) => {
     sound.playClick();
     setLanguageState(lang);
@@ -136,6 +141,7 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const setCurrentTheme = (theme: ThemeId) => {
     sound.playClick();
     setCurrentThemeState(theme);
+    applyThemeToDOM(theme);
   };
 
   const t = translations[language];

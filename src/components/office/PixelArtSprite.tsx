@@ -7,6 +7,7 @@ interface PixelCharacterProps {
   onClick: () => void;
   isSelected?: boolean;
   showSpeech?: boolean;
+  isWalking?: boolean;
 }
 
 export const PixelCharacter: React.FC<PixelCharacterProps> = ({
@@ -14,6 +15,7 @@ export const PixelCharacter: React.FC<PixelCharacterProps> = ({
   onClick,
   isSelected,
   showSpeech,
+  isWalking = false,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -23,16 +25,14 @@ export const PixelCharacter: React.FC<PixelCharacterProps> = ({
       case 'nova':
         return (
           <svg viewBox="0 0 16 20" className="w-6 h-8 image-pixelated">
-            <rect x="3" y="1" width="10" height="9" fill="#1E293B" rx="1" />
-            <rect x="2" y="5" width="1" height="5" fill="#334155" />
-            <rect x="13" y="5" width="1" height="5" fill="#334155" />
+            {!isWalking && <rect x="3" y="1" width="10" height="9" fill="#1E293B" rx="1" />}
             
             {/* Hair */}
             <rect x="5" y="3" width="6" height="3" fill="#451A03" />
             <rect x="4" y="4" width="1" height="3" fill="#451A03" />
             <rect x="11" y="4" width="1" height="3" fill="#451A03" />
             
-            {/* Face */}
+            {/* Face & Eyes */}
             <rect x="5" y="5" width="6" height="5" fill="#FCD34D" />
             <rect x="6" y="6" width="1" height="1" fill="#000000" />
             <rect x="9" y="6" width="1" height="1" fill="#000000" />
@@ -45,16 +45,25 @@ export const PixelCharacter: React.FC<PixelCharacterProps> = ({
             <rect x="3" y="13" width="2" height="2" fill="#FCD34D" />
             <rect x="11" y="13" width="2" height="2" fill="#FCD34D" />
             
-            {/* Chair Base */}
-            <rect x="7" y="16" width="2" height="3" fill="#0F172A" />
-            <rect x="4" y="18" width="8" height="1.5" fill="#334155" />
+            {/* Legs / Chair */}
+            {isWalking ? (
+              <>
+                <rect x="5" y="16" width="2" height="4" fill="#0F172A" />
+                <rect x="9" y="16" width="2" height="4" fill="#0F172A" />
+              </>
+            ) : (
+              <>
+                <rect x="7" y="16" width="2" height="3" fill="#0F172A" />
+                <rect x="4" y="18" width="8" height="1.5" fill="#334155" />
+              </>
+            )}
           </svg>
         );
 
       case 'ada':
         return (
           <svg viewBox="0 0 16 20" className="w-6 h-8 image-pixelated">
-            <rect x="3" y="1" width="10" height="9" fill="#1E1B4B" rx="1" />
+            {!isWalking && <rect x="3" y="1" width="10" height="9" fill="#1E1B4B" rx="1" />}
             {/* Grey Hair */}
             <rect x="4" y="2" width="8" height="4" fill="#CBD5E1" />
             <rect x="4" y="4" width="1" height="4" fill="#CBD5E1" />
@@ -73,15 +82,24 @@ export const PixelCharacter: React.FC<PixelCharacterProps> = ({
             <rect x="3" y="13" width="2" height="2" fill="#FED7AA" />
             <rect x="11" y="13" width="2" height="2" fill="#FED7AA" />
             
-            <rect x="7" y="16" width="2" height="3" fill="#0F172A" />
-            <rect x="4" y="18" width="8" height="1.5" fill="#334155" />
+            {isWalking ? (
+              <>
+                <rect x="5" y="16" width="2" height="4" fill="#1E1B4B" />
+                <rect x="9" y="16" width="2" height="4" fill="#1E1B4B" />
+              </>
+            ) : (
+              <>
+                <rect x="7" y="16" width="2" height="3" fill="#0F172A" />
+                <rect x="4" y="18" width="8" height="1.5" fill="#334155" />
+              </>
+            )}
           </svg>
         );
 
       case 'emre':
         return (
           <svg viewBox="0 0 16 20" className="w-6 h-8 image-pixelated">
-            <rect x="3" y="1" width="10" height="9" fill="#2E1A0F" rx="1" />
+            {!isWalking && <rect x="3" y="1" width="10" height="9" fill="#2E1A0F" rx="1" />}
             <rect x="5" y="2" width="6" height="4" fill="#18181B" />
             <rect x="4" y="3" width="1" height="4" fill="#18181B" />
             <rect x="11" y="3" width="1" height="4" fill="#18181B" />
@@ -95,15 +113,24 @@ export const PixelCharacter: React.FC<PixelCharacterProps> = ({
             <rect x="3" y="13" width="2" height="2" fill="#FDE68A" />
             <rect x="11" y="13" width="2" height="2" fill="#FDE68A" />
             
-            <rect x="7" y="16" width="2" height="3" fill="#0F172A" />
-            <rect x="4" y="18" width="8" height="1.5" fill="#475569" />
+            {isWalking ? (
+              <>
+                <rect x="5" y="16" width="2" height="4" fill="#064E3B" />
+                <rect x="9" y="16" width="2" height="4" fill="#064E3B" />
+              </>
+            ) : (
+              <>
+                <rect x="7" y="16" width="2" height="3" fill="#0F172A" />
+                <rect x="4" y="18" width="8" height="1.5" fill="#475569" />
+              </>
+            )}
           </svg>
         );
 
       case 'kai':
         return (
           <svg viewBox="0 0 16 20" className="w-6 h-8 image-pixelated">
-            <rect x="3" y="1" width="10" height="9" fill="#1E293B" rx="1" />
+            {!isWalking && <rect x="3" y="1" width="10" height="9" fill="#1E293B" rx="1" />}
             {/* Orange Cap */}
             <rect x="4" y="2" width="8" height="3" fill="#EA580C" />
             <rect x="3" y="4" width="10" height="1.5" fill="#C2410C" />
@@ -117,15 +144,24 @@ export const PixelCharacter: React.FC<PixelCharacterProps> = ({
             <rect x="3" y="13" width="2" height="2" fill="#FDE68A" />
             <rect x="11" y="13" width="2" height="2" fill="#FDE68A" />
             
-            <rect x="7" y="16" width="2" height="3" fill="#0F172A" />
-            <rect x="4" y="18" width="8" height="1.5" fill="#334155" />
+            {isWalking ? (
+              <>
+                <rect x="5" y="16" width="2" height="4" fill="#1E3A8A" />
+                <rect x="9" y="16" width="2" height="4" fill="#1E3A8A" />
+              </>
+            ) : (
+              <>
+                <rect x="7" y="16" width="2" height="3" fill="#0F172A" />
+                <rect x="4" y="18" width="8" height="1.5" fill="#334155" />
+              </>
+            )}
           </svg>
         );
 
       case 'rio':
         return (
           <svg viewBox="0 0 16 20" className="w-6 h-8 image-pixelated">
-            <rect x="3" y="1" width="10" height="9" fill="#3F1D38" rx="1" />
+            {!isWalking && <rect x="3" y="1" width="10" height="9" fill="#3F1D38" rx="1" />}
             {/* Headphones */}
             <rect x="4" y="1.5" width="8" height="1" fill="#06B6D4" />
             <rect x="3" y="2.5" width="2" height="4" fill="#0891B2" />
@@ -141,16 +177,24 @@ export const PixelCharacter: React.FC<PixelCharacterProps> = ({
             <rect x="3" y="13" width="2" height="2" fill="#FED7AA" />
             <rect x="11" y="13" width="2" height="2" fill="#FED7AA" />
             
-            <rect x="7" y="16" width="2" height="3" fill="#0F172A" />
-            <rect x="4" y="18" width="8" height="1.5" fill="#334155" />
+            {isWalking ? (
+              <>
+                <rect x="5" y="16" width="2" height="4" fill="#831843" />
+                <rect x="9" y="16" width="2" height="4" fill="#831843" />
+              </>
+            ) : (
+              <>
+                <rect x="7" y="16" width="2" height="3" fill="#0F172A" />
+                <rect x="4" y="18" width="8" height="1.5" fill="#334155" />
+              </>
+            )}
           </svg>
         );
 
       case 'lux':
-        // Blonde hair, cyan headphones, pink/purple outfit (Room 5 Breakroom Lead)
         return (
           <svg viewBox="0 0 16 20" className="w-6 h-8 image-pixelated">
-            <rect x="3" y="1" width="10" height="9" fill="#2E1065" rx="1" />
+            {!isWalking && <rect x="3" y="1" width="10" height="9" fill="#2E1065" rx="1" />}
             <rect x="4" y="2" width="8" height="3.5" fill="#FACC15" />
             <rect x="3" y="4" width="1" height="4" fill="#EAB308" />
             <rect x="12" y="4" width="1" height="4" fill="#EAB308" />
@@ -164,16 +208,24 @@ export const PixelCharacter: React.FC<PixelCharacterProps> = ({
             <rect x="3" y="13" width="2" height="2" fill="#FED7AA" />
             <rect x="11" y="13" width="2" height="2" fill="#FED7AA" />
             
-            <rect x="7" y="16" width="2" height="3" fill="#0F172A" />
-            <rect x="4" y="18" width="8" height="1.5" fill="#334155" />
+            {isWalking ? (
+              <>
+                <rect x="5" y="16" width="2" height="4" fill="#701A75" />
+                <rect x="9" y="16" width="2" height="4" fill="#701A75" />
+              </>
+            ) : (
+              <>
+                <rect x="7" y="16" width="2" height="3" fill="#0F172A" />
+                <rect x="4" y="18" width="8" height="1.5" fill="#334155" />
+              </>
+            )}
           </svg>
         );
 
       case 'sol':
-        // Yellow cyber headset, dark brown hair, yellow matrix outfit
         return (
           <svg viewBox="0 0 16 20" className="w-6 h-8 image-pixelated">
-            <rect x="3" y="1" width="10" height="9" fill="#1C1917" rx="1" />
+            {!isWalking && <rect x="3" y="1" width="10" height="9" fill="#1C1917" rx="1" />}
             <rect x="5" y="2" width="6" height="3" fill="#451A03" />
             <rect x="3" y="4" width="10" height="1.5" fill="#EAB308" />
             
@@ -186,8 +238,17 @@ export const PixelCharacter: React.FC<PixelCharacterProps> = ({
             <rect x="3" y="13" width="2" height="2" fill="#FDE68A" />
             <rect x="11" y="13" width="2" height="2" fill="#FDE68A" />
             
-            <rect x="7" y="16" width="2" height="3" fill="#0F172A" />
-            <rect x="4" y="18" width="8" height="1.5" fill="#334155" />
+            {isWalking ? (
+              <>
+                <rect x="5" y="16" width="2" height="4" fill="#713F12" />
+                <rect x="9" y="16" width="2" height="4" fill="#713F12" />
+              </>
+            ) : (
+              <>
+                <rect x="7" y="16" width="2" height="3" fill="#0F172A" />
+                <rect x="4" y="18" width="8" height="1.5" fill="#334155" />
+              </>
+            )}
           </svg>
         );
 
@@ -195,7 +256,7 @@ export const PixelCharacter: React.FC<PixelCharacterProps> = ({
       default:
         return (
           <svg viewBox="0 0 16 20" className="w-6 h-8 image-pixelated">
-            <rect x="3" y="1" width="10" height="9" fill="#1E293B" rx="1" />
+            {!isWalking && <rect x="3" y="1" width="10" height="9" fill="#1E293B" rx="1" />}
             <rect x="5" y="2" width="6" height="3" fill="#78350F" />
             <rect x="4" y="3" width="1" height="4" fill="#78350F" />
             <rect x="11" y="3" width="1" height="4" fill="#78350F" />
@@ -209,8 +270,17 @@ export const PixelCharacter: React.FC<PixelCharacterProps> = ({
             <rect x="3" y="13" width="2" height="2" fill="#FDE68A" />
             <rect x="11" y="13" width="2" height="2" fill="#FDE68A" />
             
-            <rect x="7" y="16" width="2" height="3" fill="#0F172A" />
-            <rect x="4" y="18" width="8" height="1.5" fill="#334155" />
+            {isWalking ? (
+              <>
+                <rect x="5" y="16" width="2" height="4" fill="#0F172A" />
+                <rect x="9" y="16" width="2" height="4" fill="#0F172A" />
+              </>
+            ) : (
+              <>
+                <rect x="7" y="16" width="2" height="3" fill="#0F172A" />
+                <rect x="4" y="18" width="8" height="1.5" fill="#334155" />
+              </>
+            )}
           </svg>
         );
     }
@@ -218,23 +288,25 @@ export const PixelCharacter: React.FC<PixelCharacterProps> = ({
 
   return (
     <div
-      className="relative group inline-block cursor-pointer select-none"
+      className={`relative group inline-block cursor-pointer select-none ${
+        isWalking ? 'walking-sprite' : ''
+      }`}
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Dynamic Speech Bubble */}
       {showSpeech && agent.speechBubble && (
-        <div className="absolute -top-6 left-1/2 -translate-x-1/2 z-30 px-2 py-0.5 bg-[#FFFFFF] text-[#0F172A] border border-[#0F172A] rounded text-[8px] font-mono font-bold shadow-lg whitespace-nowrap animate-bounce">
+        <div className="absolute -top-7 left-1/2 -translate-x-1/2 z-30 px-2 py-0.5 bg-[#FFFFFF] text-[#0F172A] border border-[#0F172A] rounded-md text-[8px] font-mono font-bold shadow-lg whitespace-nowrap animate-bounce">
           {agent.speechBubble}
         </div>
       )}
 
-      {/* The Sprite with Swivel Chair */}
+      {/* The Sprite with Swivel Chair or Walking Legs */}
       <div
         className={`transition-all duration-150 ${
           isSelected
-            ? 'scale-110 drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]'
+            ? 'scale-110 drop-shadow-[0_0_8px_rgba(224,86,76,0.8)]'
             : isHovered
             ? 'scale-110 drop-shadow-[0_0_6px_rgba(0,229,255,0.6)]'
             : 'hover:scale-105'

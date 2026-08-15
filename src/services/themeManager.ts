@@ -182,3 +182,24 @@ export const THEMES: Record<ThemeId, ThemeDefinition> = {
     terminalHeader: '#0D1712',
   },
 };
+
+export function applyThemeToDOM(themeId: ThemeId) {
+  const th = THEMES[themeId] || THEMES.espresso;
+  const root = document.documentElement;
+
+  root.style.setProperty('--app-bg-dark', th.bgDark);
+  root.style.setProperty('--app-bg-panel', th.bgPanel);
+  root.style.setProperty('--app-bg-surface', th.bgSurface);
+  root.style.setProperty('--app-border', th.borderColor);
+  root.style.setProperty('--app-accent', th.accentColor);
+  root.style.setProperty('--app-accent-hover', th.accentHover);
+  root.style.setProperty('--app-accent-glow', th.accentGlow);
+  root.style.setProperty('--app-text-accent', th.textAccent);
+  root.style.setProperty('--app-badge-bg', th.badgeBg);
+  root.style.setProperty('--app-badge-text', th.badgeText);
+  root.style.setProperty('--app-terminal-bg', th.terminalBg);
+  root.style.setProperty('--app-terminal-header', th.terminalHeader);
+
+  // Set data-theme on root for CSS targeting
+  root.setAttribute('data-theme', themeId);
+}

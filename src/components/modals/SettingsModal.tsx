@@ -16,10 +16,16 @@ import {
   Check,
   Volume2,
   VolumeX,
-  Globe,
   Key,
   Download,
   Terminal,
+  Activity,
+  Zap,
+  Lock,
+  Radio,
+  Sliders,
+  AlertTriangle,
+  RotateCcw,
 } from 'lucide-react';
 import { useWorkspace } from '../../context/WorkspaceContext';
 import { sound } from '../../services/soundEngine';
@@ -48,12 +54,23 @@ export const SettingsModal: React.FC = () => {
     setCurrentTheme,
     isSoundMuted,
     toggleSound,
-    t,
   } = useWorkspace();
 
   const [activeTab, setActiveTab] = useState<SettingsTab>('appearance');
   const [selectedThemeDraft, setSelectedThemeDraft] = useState<ThemeId>(currentTheme);
   const [savedSuccess, setSavedSuccess] = useState(false);
+
+  // Form states for all tabs
+  const [workspaceName, setWorkspaceName] = useState('Shaz Vision AI Workspace');
+  const [supervisorName, setSupervisorName] = useState('Berkay Şahin (BS)');
+  const [speechRate, setSpeechRate] = useState('1.0');
+  const [voiceStyle, setVoiceStyle] = useState('synth_8bit');
+  const [safetyMode, setSafetyMode] = useState<'supervised' | 'autonomous' | 'strict'>('supervised');
+  const [autoSandbox, setAutoSandbox] = useState(true);
+  const [owaspScan, setOwaspScan] = useState(true);
+  const [notifSound, setNotifSound] = useState(true);
+  const [notifErrors, setNotifErrors] = useState(true);
+  const [notifDesktop, setNotifDesktop] = useState(true);
 
   // Sync draft when opened
   React.useEffect(() => {
@@ -68,7 +85,7 @@ export const SettingsModal: React.FC = () => {
   const handleSelectTheme = (themeId: ThemeId) => {
     sound.playClick();
     setSelectedThemeDraft(themeId);
-    setCurrentTheme(themeId); // Apply immediately as stated in bottom helper text!
+    setCurrentTheme(themeId);
   };
 
   const handleSave = () => {
@@ -83,6 +100,27 @@ export const SettingsModal: React.FC = () => {
   const handleClose = () => {
     sound.playClick();
     setIsSettingsOpen(false);
+  };
+
+  const handleExportConfig = () => {
+    sound.playSuccess();
+    const configData = {
+      workspaceName,
+      supervisorName,
+      language,
+      theme: currentTheme,
+      safetyMode,
+      exportedAt: new Date().toISOString(),
+      version: '0.3.0-BETA',
+      author: '@berkaysahin-dev',
+    };
+    const blob = new Blob([JSON.stringify(configData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `shaz-vision-workspace-config.json`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   const tabLabelsTr: Record<SettingsTab, string> = {
@@ -133,7 +171,7 @@ export const SettingsModal: React.FC = () => {
       onClick={handleClose}
     >
       <div
-        className="w-full max-w-4xl bg-[#111319] border border-[#222736] rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[620px] max-h-[90vh] animate-in zoom-in-95 duration-150 text-slate-300"
+        className="w-full max-w-4xl bg-[#111319] border border-[#222736] rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[640px] max-h-[92vh] animate-in zoom-in-95 duration-150 text-slate-300"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header with Breadcrumb & Close */}
@@ -172,7 +210,7 @@ export const SettingsModal: React.FC = () => {
                   }}
                   className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-colors ${
                     activeTab === 'general'
-                      ? 'bg-[#261E1A] text-amber-200 font-bold border border-amber-800/40'
+                      ? 'bg-[#2E1916] text-[#FFA494] font-bold border border-[#7A362E]'
                       : 'text-slate-400 hover:bg-[#161922] hover:text-slate-200'
                   }`}
                 >
@@ -202,7 +240,7 @@ export const SettingsModal: React.FC = () => {
                   }}
                   className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-colors ${
                     activeTab === 'shortcuts'
-                      ? 'bg-[#261E1A] text-amber-200 font-bold border border-amber-800/40'
+                      ? 'bg-[#2E1916] text-[#FFA494] font-bold border border-[#7A362E]'
                       : 'text-slate-400 hover:bg-[#161922] hover:text-slate-200'
                   }`}
                 >
@@ -223,7 +261,7 @@ export const SettingsModal: React.FC = () => {
                   }}
                   className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-colors ${
                     activeTab === 'voice'
-                      ? 'bg-[#261E1A] text-amber-200 font-bold border border-amber-800/40'
+                      ? 'bg-[#2E1916] text-[#FFA494] font-bold border border-[#7A362E]'
                       : 'text-slate-400 hover:bg-[#161922] hover:text-slate-200'
                   }`}
                 >
@@ -238,7 +276,7 @@ export const SettingsModal: React.FC = () => {
                   }}
                   className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-colors ${
                     activeTab === 'models'
-                      ? 'bg-[#261E1A] text-amber-200 font-bold border border-amber-800/40'
+                      ? 'bg-[#2E1916] text-[#FFA494] font-bold border border-[#7A362E]'
                       : 'text-slate-400 hover:bg-[#161922] hover:text-slate-200'
                   }`}
                 >
@@ -259,7 +297,7 @@ export const SettingsModal: React.FC = () => {
                   }}
                   className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-colors ${
                     activeTab === 'integrations'
-                      ? 'bg-[#261E1A] text-amber-200 font-bold border border-amber-800/40'
+                      ? 'bg-[#2E1916] text-[#FFA494] font-bold border border-[#7A362E]'
                       : 'text-slate-400 hover:bg-[#161922] hover:text-slate-200'
                   }`}
                 >
@@ -274,7 +312,7 @@ export const SettingsModal: React.FC = () => {
                   }}
                   className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-colors ${
                     activeTab === 'notifications'
-                      ? 'bg-[#261E1A] text-amber-200 font-bold border border-amber-800/40'
+                      ? 'bg-[#2E1916] text-[#FFA494] font-bold border border-[#7A362E]'
                       : 'text-slate-400 hover:bg-[#161922] hover:text-slate-200'
                   }`}
                 >
@@ -289,7 +327,7 @@ export const SettingsModal: React.FC = () => {
                   }}
                   className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-colors ${
                     activeTab === 'devices'
-                      ? 'bg-[#261E1A] text-amber-200 font-bold border border-amber-800/40'
+                      ? 'bg-[#2E1916] text-[#FFA494] font-bold border border-[#7A362E]'
                       : 'text-slate-400 hover:bg-[#161922] hover:text-slate-200'
                   }`}
                 >
@@ -310,7 +348,7 @@ export const SettingsModal: React.FC = () => {
                   }}
                   className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-colors ${
                     activeTab === 'security'
-                      ? 'bg-[#261E1A] text-amber-200 font-bold border border-amber-800/40'
+                      ? 'bg-[#2E1916] text-[#FFA494] font-bold border border-[#7A362E]'
                       : 'text-slate-400 hover:bg-[#161922] hover:text-slate-200'
                   }`}
                 >
@@ -325,7 +363,7 @@ export const SettingsModal: React.FC = () => {
                   }}
                   className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-colors ${
                     activeTab === 'permissions'
-                      ? 'bg-[#261E1A] text-amber-200 font-bold border border-amber-800/40'
+                      ? 'bg-[#2E1916] text-[#FFA494] font-bold border border-[#7A362E]'
                       : 'text-slate-400 hover:bg-[#161922] hover:text-slate-200'
                   }`}
                 >
@@ -340,7 +378,7 @@ export const SettingsModal: React.FC = () => {
                   }}
                   className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-colors ${
                     activeTab === 'account'
-                      ? 'bg-[#261E1A] text-amber-200 font-bold border border-amber-800/40'
+                      ? 'bg-[#2E1916] text-[#FFA494] font-bold border border-[#7A362E]'
                       : 'text-slate-400 hover:bg-[#161922] hover:text-slate-200'
                   }`}
                 >
@@ -354,11 +392,10 @@ export const SettingsModal: React.FC = () => {
           {/* Right Main Content Panel */}
           <div className="flex-1 bg-[#10121A] p-5 overflow-y-auto min-h-0">
             {/* =========================================================================
-                TAB 1: GÖRÜNÜM (THEME PALETTES GRID MATCHING MURATIFY SCREENSHOT)
+                TAB 1: GÖRÜNÜM (THEMES GRID)
                ========================================================================= */}
             {activeTab === 'appearance' && (
               <div className="space-y-4">
-                {/* 2-Column Grid of Theme Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
                   {themeList.map((thId) => {
                     const th = THEMES[thId];
@@ -370,11 +407,10 @@ export const SettingsModal: React.FC = () => {
                         onClick={() => handleSelectTheme(thId)}
                         className={`rounded-xl p-3 bg-[#151722] border transition-all cursor-pointer space-y-2 relative group ${
                           isSelected
-                            ? 'border-[#E0564C] shadow-[0_0_12px_rgba(224,86,76,0.3)] ring-1 ring-[#E0564C]'
+                            ? 'border-[#E0564C] shadow-[0_0_12px_rgba(224,86,76,0.35)] ring-1 ring-[#E0564C]'
                             : 'border-[#222736] hover:border-slate-600 hover:bg-[#181C28]'
                         }`}
                       >
-                        {/* Mini Terminal Preview Frame */}
                         <div
                           className="w-full h-16 rounded-lg p-2 flex flex-col justify-between border relative overflow-hidden font-mono text-[9px]"
                           style={{
@@ -382,7 +418,6 @@ export const SettingsModal: React.FC = () => {
                             borderColor: th.borderColor,
                           }}
                         >
-                          {/* Mini Window Controls & Header */}
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-1.5">
                               <span
@@ -399,7 +434,6 @@ export const SettingsModal: React.FC = () => {
                             </div>
                           </div>
 
-                          {/* Mini Terminal Code Line */}
                           <div className="flex items-center justify-between text-[8px]">
                             <span className="text-slate-400">
                               {language === 'tr' ? 'build ✓ temiz' : 'build ✓ clean'}
@@ -411,7 +445,6 @@ export const SettingsModal: React.FC = () => {
                           </div>
                         </div>
 
-                        {/* Theme Name & Description */}
                         <div>
                           <div className="flex items-center justify-between">
                             <span className="font-bold text-xs text-slate-100">
@@ -433,7 +466,7 @@ export const SettingsModal: React.FC = () => {
             )}
 
             {/* =========================================================================
-                TAB 2: GENEL (GENERAL WORKSPACE PREFERENCES)
+                TAB 2: GENEL (GENERAL)
                ========================================================================= */}
             {activeTab === 'general' && (
               <div className="space-y-4 text-xs font-mono">
@@ -447,7 +480,8 @@ export const SettingsModal: React.FC = () => {
                     </label>
                     <input
                       type="text"
-                      defaultValue="Shaz Vision AI Workspace"
+                      value={workspaceName}
+                      onChange={(e) => setWorkspaceName(e.target.value)}
                       className="w-full mt-1 px-3 py-1.5 bg-[#0D0F15] border border-[#232838] rounded-lg text-slate-200 outline-none"
                     />
                   </div>
@@ -458,7 +492,8 @@ export const SettingsModal: React.FC = () => {
                     </label>
                     <input
                       type="text"
-                      defaultValue="Berkay Şahin (BS)"
+                      value={supervisorName}
+                      onChange={(e) => setSupervisorName(e.target.value)}
                       className="w-full mt-1 px-3 py-1.5 bg-[#0D0F15] border border-[#232838] rounded-lg text-slate-200 outline-none"
                     />
                   </div>
@@ -479,7 +514,7 @@ export const SettingsModal: React.FC = () => {
                     <button
                       onClick={() => setLanguage('tr')}
                       className={`px-3 py-1 rounded text-xs font-bold ${
-                        language === 'tr' ? 'bg-[#7C3AED] text-white' : 'text-slate-400'
+                        language === 'tr' ? 'bg-[#E0564C] text-white' : 'text-slate-400'
                       }`}
                     >
                       Türkçe
@@ -487,7 +522,7 @@ export const SettingsModal: React.FC = () => {
                     <button
                       onClick={() => setLanguage('en')}
                       className={`px-3 py-1 rounded text-xs font-bold ${
-                        language === 'en' ? 'bg-[#7C3AED] text-white' : 'text-slate-400'
+                        language === 'en' ? 'bg-[#E0564C] text-white' : 'text-slate-400'
                       }`}
                     >
                       English
@@ -530,17 +565,23 @@ export const SettingsModal: React.FC = () => {
                   {language === 'tr' ? 'Klavye Kısayolları' : 'Keyboard Shortcuts'}
                 </div>
                 {[
-                  { key: '⌘ + K / Ctrl + K', desc: language === 'tr' ? 'Hızlı Komut Paleti & Arama' : 'Global Command Palette & Search' },
-                  { key: '⌘ / Ctrl (Basılı Tut)', desc: language === 'tr' ? 'Agent X Bas-Konuş Modu' : 'Agent X Push-to-Talk' },
-                  { key: 'Esc', desc: language === 'tr' ? 'Açık Modalı / Çekmeceyi Kapat' : 'Close Active Modal / Drawer' },
-                  { key: '⌘ + 1 / 2 / 3', desc: language === 'tr' ? 'Departman Takımları Arasında Geçiş' : 'Switch Department Teams' },
-                  { key: '⌘ + S', desc: language === 'tr' ? 'Kod Çalışma Alanındaki Dosyayı Kaydet' : 'Save Active File in Workspace' },
+                  { key: '⌘ + K / Ctrl + K', desc: language === 'tr' ? 'Hızlı Komut Paleti & Arama' : 'Global Command Palette & Search', tag: 'Global' },
+                  { key: '⌘ / Ctrl (Basılı Tut)', desc: language === 'tr' ? 'Agent X Bas-Konuş Modu' : 'Agent X Push-to-Talk', tag: 'Voice' },
+                  { key: 'Esc', desc: language === 'tr' ? 'Açık Modalı / Çekmeceyi Kapat' : 'Close Active Modal / Drawer', tag: 'UI' },
+                  { key: '⌘ + 1 / 2 / 3', desc: language === 'tr' ? 'Departman Takımları Arasında Geçiş' : 'Switch Department Teams', tag: 'Teams' },
+                  { key: '⌘ + S', desc: language === 'tr' ? 'Kod Çalışma Alanındaki Dosyayı Kaydet' : 'Save Active File in Workspace', tag: 'Code' },
+                  { key: 'F5 / Ctrl + R', desc: language === 'tr' ? 'Tarayıcı DOM Önizlemesini Yenile' : 'Reload Browser Workspace', tag: 'Browser' },
                 ].map((item, idx) => (
                   <div
                     key={idx}
                     className="p-2.5 rounded-lg bg-[#151722] border border-[#222736] flex items-center justify-between"
                   >
-                    <span className="text-slate-300">{item.desc}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-[#1F2536] text-purple-300 font-bold">
+                        {item.tag}
+                      </span>
+                      <span className="text-slate-300">{item.desc}</span>
+                    </div>
                     <kbd className="px-2 py-0.5 rounded bg-[#0D0F15] border border-[#282F44] text-[10px] text-cyan-300 font-bold">
                       {item.key}
                     </kbd>
@@ -550,7 +591,75 @@ export const SettingsModal: React.FC = () => {
             )}
 
             {/* =========================================================================
-                TAB 4: AI MOTORLARI (API KEYS & PROVIDERS)
+                TAB 4: SES & AGENT X (VOICE)
+               ========================================================================= */}
+            {activeTab === 'voice' && (
+              <div className="space-y-4 text-xs font-mono">
+                <div className="p-3.5 rounded-xl bg-[#151722] border border-[#222736] space-y-3">
+                  <div className="font-bold text-slate-100 text-sm">
+                    {language === 'tr' ? 'Agent X Ses Motoru Ayarları' : 'Agent X Voice Synthesis'}
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      { id: 'synth_8bit', label: '8-Bit Retro Synth' },
+                      { id: 'neural_pro', label: 'Neural Studio Pro' },
+                      { id: 'echo_ai', label: 'Echo Cybernetic' },
+                      { id: 'pulse_64', label: 'Commodore 64 Wave' },
+                    ].map((v) => (
+                      <button
+                        key={v.id}
+                        onClick={() => {
+                          sound.playAgentPing();
+                          setVoiceStyle(v.id);
+                        }}
+                        className={`p-2 rounded-lg border text-left flex items-center justify-between transition-all ${
+                          voiceStyle === v.id
+                            ? 'bg-[#2E1916] text-[#FFA494] border-[#7A362E] font-bold'
+                            : 'bg-[#0D0F15] border-[#222736] text-slate-400'
+                        }`}
+                      >
+                        <span>{v.label}</span>
+                        {voiceStyle === v.id && <Radio className="w-3 h-3 text-[#FFA494]" />}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between text-[11px] text-slate-400 mb-1">
+                      <span>{language === 'tr' ? 'Konuşma Hızı' : 'Speech Rate'}</span>
+                      <span className="text-cyan-300 font-bold">{speechRate}x</span>
+                    </div>
+                    <input
+                      type="range"
+                      min="0.5"
+                      max="2.0"
+                      step="0.1"
+                      value={speechRate}
+                      onChange={(e) => setSpeechRate(e.target.value)}
+                      className="w-full accent-[#E0564C]"
+                    />
+                  </div>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-[#151722] border border-[#222736] flex items-center justify-between">
+                  <div>
+                    <div className="font-bold text-slate-100">
+                      {language === 'tr' ? 'Bas-Konuş (Push-to-Talk) Kısayolu' : 'Push-to-Talk Hotkey'}
+                    </div>
+                    <div className="text-[10px] text-slate-400">
+                      {language === 'tr' ? 'Mikrofonu aktif etmek için tuşu basılı tutun.' : 'Hold key to broadcast voice prompt.'}
+                    </div>
+                  </div>
+                  <kbd className="px-2.5 py-1 rounded bg-[#0D0F15] border border-purple-500/40 text-purple-300 text-xs font-bold">
+                    ⌘ Command
+                  </kbd>
+                </div>
+              </div>
+            )}
+
+            {/* =========================================================================
+                TAB 5: AI MOTORLARI (MODELS)
                ========================================================================= */}
             {activeTab === 'models' && (
               <div className="space-y-3 text-xs font-mono">
@@ -562,6 +671,7 @@ export const SettingsModal: React.FC = () => {
                   { name: 'OpenAI (GPT-4o / GPT-5-Codex)', env: 'OPENAI_API_KEY', val: 'sk-proj-••••••••••••••••' },
                   { name: 'Google Gemini (1.5 Pro / Flash)', env: 'GEMINI_API_KEY', val: 'AIzaSy••••••••••••••••' },
                   { name: 'DeepSeek (V3 / R1)', env: 'DEEPSEEK_API_KEY', val: 'sk-dpsk-••••••••••••••••' },
+                  { name: 'Local Ollama / vLLM Endpoint', env: 'OLLAMA_ENDPOINT', val: 'http://localhost:11434/v1' },
                 ].map((prov, idx) => (
                   <div key={idx} className="p-3 rounded-xl bg-[#151722] border border-[#222736] space-y-1.5">
                     <div className="flex justify-between items-center">
@@ -581,18 +691,224 @@ export const SettingsModal: React.FC = () => {
             )}
 
             {/* =========================================================================
-                OTHER TABS PLACEHOLDER (SES, ENTEGRASYONLAR, GÜVENLİK VB.)
+                TAB 6: ENTEGRASYONLAR (MCP & CONNECTORS)
                ========================================================================= */}
-            {activeTab !== 'appearance' && activeTab !== 'general' && activeTab !== 'shortcuts' && activeTab !== 'models' && (
-              <div className="p-6 rounded-2xl bg-[#151722] border border-[#222736] text-center space-y-2">
-                <div className="font-bold text-slate-100 text-sm">{currentTabName}</div>
-                <div className="text-xs text-slate-400">
-                  {language === 'tr'
-                    ? 'Bu ayar kategorisi geçerli Shaz Vision AI Workspace çalışma alanınız için etkinleştirildi.'
-                    : 'This settings category is active for your current Shaz Vision AI Workspace.'}
+            {activeTab === 'integrations' && (
+              <div className="space-y-3 text-xs font-mono">
+                <div className="font-bold text-slate-100 text-sm mb-2">
+                  {language === 'tr' ? 'Model Context Protocol (MCP) & Servisler' : 'MCP & Service Integrations'}
                 </div>
-                <div className="text-[10px] text-emerald-400 font-bold">
-                  ✓ {language === 'tr' ? 'Tüm servisler ve protokoller bağlı.' : 'All services and protocols connected.'}
+                {[
+                  { name: 'GitHub Integration (@berkaysahin-dev)', desc: 'PR review, commit signing, repository operations', status: 'Connected', active: true },
+                  { name: 'PostgreSQL Database Adapter', desc: 'Query execution, schema reflection, migration inspection', status: 'Live on :5432', active: true },
+                  { name: 'Headless Chromium Browser', desc: 'Autonomous DOM rendering, assertions, visual regression', status: 'Active', active: true },
+                  { name: 'Local Filesystem & Ripgrep Sandbox', desc: 'Secure workspace file access and pattern search', status: 'Active', active: true },
+                  { name: 'Slack & Discord Webhook Dispatcher', desc: 'Sprint completion and incident broadcasting', status: 'Standby', active: false },
+                ].map((integ, idx) => (
+                  <div key={idx} className="p-3 rounded-xl bg-[#151722] border border-[#222736] flex items-center justify-between">
+                    <div>
+                      <div className="font-bold text-slate-200">{integ.name}</div>
+                      <div className="text-[10px] text-slate-400 mt-0.5">{integ.desc}</div>
+                    </div>
+                    <span
+                      className={`text-[9px] px-2 py-0.5 rounded font-bold border ${
+                        integ.active
+                          ? 'bg-emerald-950/80 text-emerald-300 border-emerald-500/40'
+                          : 'bg-slate-900 text-slate-500 border-slate-700'
+                      }`}
+                    >
+                      {integ.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* =========================================================================
+                TAB 7: BİLDİRİMLER (NOTIFICATIONS)
+               ========================================================================= */}
+            {activeTab === 'notifications' && (
+              <div className="space-y-3 text-xs font-mono">
+                <div className="font-bold text-slate-100 text-sm mb-2">
+                  {language === 'tr' ? 'Bildirim ve Uyarı Tercihleri' : 'Notification Preferences'}
+                </div>
+                {[
+                  { title: language === 'tr' ? 'Görev Tamamlandığında Ses Çal' : 'Play Sound on Task Completion', state: notifSound, set: setNotifSound },
+                  { title: language === 'tr' ? 'Kritik Güvenlik / Hata Uyarıları' : 'Critical Security & Error Alarms', state: notifErrors, set: setNotifErrors },
+                  { title: language === 'tr' ? 'Masaüstü Bildirim Bildirisi (Toast)' : 'Native Desktop Toast Notifications', state: notifDesktop, set: setNotifDesktop },
+                ].map((item, idx) => (
+                  <div key={idx} className="p-3 rounded-xl bg-[#151722] border border-[#222736] flex items-center justify-between">
+                    <span className="font-bold text-slate-200">{item.title}</span>
+                    <button
+                      onClick={() => item.set(!item.state)}
+                      className={`px-3 py-1 rounded text-xs font-bold border transition-colors ${
+                        item.state
+                          ? 'bg-[#E0564C] text-white border-[#E0564C]'
+                          : 'bg-[#0D0F15] text-slate-500 border-[#232838]'
+                      }`}
+                    >
+                      {item.state ? (language === 'tr' ? 'AÇIK' : 'ON') : (language === 'tr' ? 'KAPALI' : 'OFF')}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* =========================================================================
+                TAB 8: CİHAZLAR (DEVICES & RUNTIME)
+               ========================================================================= */}
+            {activeTab === 'devices' && (
+              <div className="space-y-3 text-xs font-mono">
+                <div className="font-bold text-slate-100 text-sm mb-2">
+                  {language === 'tr' ? 'Masaüstü Çalışma Zamanı & Donanım' : 'Desktop Runtime & Hardware'}
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="p-3 rounded-xl bg-[#151722] border border-[#222736]">
+                    <div className="text-[10px] text-slate-500 uppercase">SHELL RUNTIME</div>
+                    <div className="font-bold text-slate-200 mt-1">Electron v33.4.11</div>
+                    <div className="text-[10px] text-emerald-400 mt-0.5">● Native Desktop Host</div>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-[#151722] border border-[#222736]">
+                    <div className="text-[10px] text-slate-500 uppercase">NODE.JS PROCESS</div>
+                    <div className="font-bold text-slate-200 mt-1">Node v20.18.0</div>
+                    <div className="text-[10px] text-cyan-300 mt-0.5">● RAM: 214 MB</div>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-[#151722] border border-[#222736]">
+                    <div className="text-[10px] text-slate-500 uppercase">GRAPHICS ACCELERATION</div>
+                    <div className="font-bold text-slate-200 mt-1">DirectX 12 (D3D11)</div>
+                    <div className="text-[10px] text-emerald-400 mt-0.5">● 60 FPS Pixel Art Engine</div>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-[#151722] border border-[#222736]">
+                    <div className="text-[10px] text-slate-500 uppercase">IPC LATENCY</div>
+                    <div className="font-bold text-slate-200 mt-1">&lt; 1.0 ms</div>
+                    <div className="text-[10px] text-cyan-300 mt-0.5">● Ultra Low Latency</div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* =========================================================================
+                TAB 9: GÜVEN (SECURITY)
+               ========================================================================= */}
+            {activeTab === 'security' && (
+              <div className="space-y-3 text-xs font-mono">
+                <div className="font-bold text-slate-100 text-sm mb-2">
+                  {language === 'tr' ? 'Otonom Çalıştırma Güvenlik Modu' : 'Autonomous Execution Safety Mode'}
+                </div>
+
+                <div className="space-y-2">
+                  {[
+                    { id: 'supervised', title: language === 'tr' ? 'Denetimli Otopilot (Önerilen)' : 'Supervised Autopilot (Recommended)', desc: language === 'tr' ? 'Ajanlar kod yazar, tehlikeli komutlarda onay ister.' : 'Agents code autonomously, asks confirmation on dangerous actions.' },
+                    { id: 'strict', title: language === 'tr' ? 'Sıkı Güvenlik Modu' : 'Strict Approval Mode', desc: language === 'tr' ? 'Her dosya yazma ve komut süpervizör onayı bekler.' : 'Every file write and CLI execution requires manual approval.' },
+                    { id: 'autonomous', title: language === 'tr' ? 'Tam Otonom Çalışma' : 'Full Autonomous Mode', desc: language === 'tr' ? 'Ajanlar duraksamadan geliştirme yapar ve commit atar.' : 'Agents code and deploy non-stop with full shell access.' },
+                  ].map((m) => (
+                    <div
+                      key={m.id}
+                      onClick={() => setSafetyMode(m.id as any)}
+                      className={`p-3 rounded-xl border cursor-pointer transition-all ${
+                        safetyMode === m.id
+                          ? 'bg-[#2E1916] text-[#FFA494] border-[#7A362E]'
+                          : 'bg-[#151722] border-[#222736] text-slate-400'
+                      }`}
+                    >
+                      <div className="font-bold flex items-center justify-between">
+                        <span>{m.title}</span>
+                        {safetyMode === m.id && <Check className="w-3.5 h-3.5 text-[#FFA494]" />}
+                      </div>
+                      <div className="text-[10px] text-slate-400 mt-0.5">{m.desc}</div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="p-3 rounded-xl bg-[#151722] border border-[#222736] flex items-center justify-between mt-2">
+                  <div>
+                    <div className="font-bold text-slate-200">{language === 'tr' ? 'OWASP Kod Güvenlik Taraması' : 'OWASP Code Security Scan'}</div>
+                    <div className="text-[10px] text-slate-400">{language === 'tr' ? 'Tüm kod değişikliklerinde otomatik güvenlik denetimi.' : 'Automated vulnerability scanning on file edits.'}</div>
+                  </div>
+                  <button
+                    onClick={() => setOwaspScan(!owaspScan)}
+                    className={`px-3 py-1 rounded text-xs font-bold border ${
+                      owaspScan ? 'bg-[#E0564C] text-white border-[#E0564C]' : 'bg-[#0D0F15] text-slate-500'
+                    }`}
+                  >
+                    {owaspScan ? 'AÇIK' : 'KAPALI'}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* =========================================================================
+                TAB 10: TAKIM İZİNLERİ (PERMISSIONS)
+               ========================================================================= */}
+            {activeTab === 'permissions' && (
+              <div className="space-y-3 text-xs font-mono">
+                <div className="font-bold text-slate-100 text-sm mb-2">
+                  {language === 'tr' ? 'Ajan Departman & Rol İzin Matrisi' : 'Department & Agent Permission Matrix'}
+                </div>
+
+                <div className="space-y-2">
+                  {[
+                    { role: 'Baş Süpervizör (Berkay Şahin)', desc: 'Tam Yetkili Sistem Sahibi', perms: 'Shell, Write, Deploy, API Keys' },
+                    { role: 'Mimari & Tasarım (Ada, Rio)', desc: 'Şema Tasarımı & UI Token Modifikasyonu', perms: 'File Edit, Review, Figma Sync' },
+                    { role: 'Backend & Fullstack (Nova, Emre)', desc: 'API Geliştirme & Veritabanı Migrasyonu', perms: 'Terminal Shell, Vitest, PostgreSQL' },
+                    { role: 'QA & Güvenlik (Max, Kai)', desc: 'Penetrasyon Testi & Tarayıcı Otomasyonu', perms: 'Playwright, OWASP Scan, DOM Read' },
+                  ].map((p, idx) => (
+                    <div key={idx} className="p-3 rounded-xl bg-[#151722] border border-[#222736] space-y-1">
+                      <div className="flex justify-between items-center">
+                        <span className="font-bold text-slate-200">{p.role}</span>
+                        <span className="text-[9px] px-2 py-0.5 rounded bg-purple-950 text-purple-300 font-bold border border-purple-500/40">
+                          {p.perms}
+                        </span>
+                      </div>
+                      <div className="text-[10px] text-slate-400">{p.desc}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* =========================================================================
+                TAB 11: HESAP (ACCOUNT)
+               ========================================================================= */}
+            {activeTab === 'account' && (
+              <div className="space-y-4 text-xs font-mono">
+                <div className="p-4 rounded-xl bg-[#151722] border border-[#222736] flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-full bg-[#E0564C]/20 border border-[#E0564C] text-[#FFA494] font-bold text-base flex items-center justify-center">
+                      BS
+                    </div>
+                    <div>
+                      <div className="font-bold text-sm text-slate-100">Berkay Şahin</div>
+                      <div className="text-[11px] text-cyan-300">@berkaysahin-dev</div>
+                      <div className="text-[9px] text-slate-500 mt-0.5">GitHub Connected · Developer License</div>
+                    </div>
+                  </div>
+
+                  <span className="text-xs px-2.5 py-1 rounded-lg bg-emerald-950 text-emerald-300 font-bold border border-emerald-500/40">
+                    BETA PRO
+                  </span>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-[#151722] border border-[#222736] flex items-center justify-between">
+                  <div>
+                    <div className="font-bold text-slate-200">
+                      {language === 'tr' ? 'Çalışma Alanı Yapılandırmasını İndir' : 'Export Workspace Configuration'}
+                    </div>
+                    <div className="text-[10px] text-slate-400">
+                      {language === 'tr' ? 'Ayarları, ajan promptlarını ve tema tercihlerini JSON olarak dışa aktar.' : 'Export preferences, theme and agent configs to JSON.'}
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleExportConfig}
+                    className="px-3 py-1.5 rounded-lg bg-[#222838] hover:bg-[#2C344A] text-slate-200 text-xs font-bold border border-[#333D56] flex items-center gap-1.5"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    <span>JSON İndir</span>
+                  </button>
                 </div>
               </div>
             )}

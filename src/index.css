@@ -2,14 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --app-bg-dark: #140E0C;
+  --app-bg-panel: #1C1512;
+  --app-bg-surface: #291F1A;
+  --app-border: #42322B;
+  --app-accent: #F43F5E;
+  --app-accent-hover: #E11D48;
+  --app-accent-glow: rgba(244, 63, 94, 0.45);
+  --app-text-accent: #FECDD3;
+  --app-badge-bg: #4C0519;
+  --app-badge-text: #FDA4AF;
+  --app-terminal-bg: #0C0807;
+  --app-terminal-header: #1A120F;
+}
+
 @layer base {
   * {
-    border-color: #1E2638;
+    border-color: var(--app-border, #1E2638);
     box-sizing: border-box;
   }
 
   body {
-    background-color: #05070B;
+    background-color: var(--app-bg-dark, #05070B);
     color: #E2E8F0;
     font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     letter-spacing: -0.01em;
@@ -24,16 +39,16 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: #080B12;
+    background: var(--app-bg-dark, #080B12);
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #1E2638;
+    background: var(--app-border, #1E2638);
     border-radius: 2px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #2D3A54;
+    background: var(--app-accent, #2D3A54);
   }
 }
 
@@ -85,4 +100,24 @@
 
 .speech-bubble {
   animation: bubble-pop 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Walking character leg animation */
+@keyframes pixel-walk {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-2px) rotate(3deg);
+  }
+  50% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-2px) rotate(-3deg);
+  }
+}
+
+.walking-sprite {
+  animation: pixel-walk 0.35s infinite linear;
 }
