@@ -18,6 +18,12 @@ Created and maintained by [@berkaysahin-dev](https://github.com/berkaysahin-dev)
 
 ---
 
+## Interface Overview
+
+![Shaz Vision AI Workspace Desktop Interface Preview](docs/workspace-preview.png)
+
+---
+
 ## Architectural Highlights
 
 ### 1. Virtual Office and 2D Pixel Engine
