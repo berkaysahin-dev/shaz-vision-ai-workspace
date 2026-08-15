@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    border-color: #1E2638;
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: #05070B;
+    color: #E2E8F0;
+    font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    letter-spacing: -0.01em;
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Custom Pixel/Retro Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #080B12;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #1E2638;
+    border-radius: 2px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #2D3A54;
+  }
+}
+
+/* Pixel Art Rendering Utilities */
+.pixel-art {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Subtle CRT Scanline effect for terminal */
+.scanline-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.scanline-effect::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+  background-size: 100% 4px;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* Custom glowing pulse for active badges */
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 6px currentColor);
+  }
+  50% {
+    opacity: 0.6;
+    filter: drop-shadow(0 0 2px currentColor);
+  }
+}
+
+.animate-glow {
+  animation: glow-pulse 2s infinite ease-in-out;
+}
+
+/* Speech bubble bounce */
+@keyframes bubble-pop {
+  0% { transform: translateY(4px) scale(0.95); opacity: 0; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.speech-bubble {
+  animation: bubble-pop 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
