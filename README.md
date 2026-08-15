@@ -1,5 +1,17 @@
 # Shaz Vision AI Workspace
 
+[![Version](https://img.shields.io/badge/version-v0.3.0--beta-7C3AED?style=flat-square)](https://github.com/berkaysahin-dev/shaz-vision-ai-workspace/releases)
+[![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-1E293B?style=flat-square)](https://github.com/berkaysahin-dev/shaz-vision-ai-workspace)
+[![Author](https://img.shields.io/badge/author-@berkaysahin--dev-181717?logo=github&logoColor=white&style=flat-square)](https://github.com/berkaysahin-dev)
+
+[![React](https://img.shields.io/badge/React-18.3-61DAFB?logo=react&logoColor=black&style=flat-square)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?logo=typescript&logoColor=white&style=flat-square)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-6.4-646CFF?logo=vite&logoColor=white&style=flat-square)](https://vitejs.dev/)
+[![Electron](https://img.shields.io/badge/Electron-Desktop-47848F?logo=electron&logoColor=white&style=flat-square)](https://www.electronjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-v3.4-38B2AC?logo=tailwindcss&logoColor=white&style=flat-square)](https://tailwindcss.com/)
+[![MCP](https://img.shields.io/badge/Protocol-MCP%20Ready-10B981?style=flat-square)](https://modelcontextprotocol.io/)
+
 Shaz Vision AI Workspace is an open-source, desktop-native multi-agent orchestration environment and operating interface. Designed for autonomous software development workflows, it unifies a 2D pixel-art virtual office, concurrent tiled terminal grid, headless browser simulator, Kanban task board, and Model Context Protocol (MCP) integrations in a single high-performance desktop window.
 
 Created and maintained by [@berkaysahin-dev](https://github.com/berkaysahin-dev).
@@ -8,7 +20,7 @@ Created and maintained by [@berkaysahin-dev](https://github.com/berkaysahin-dev)
 
 ## Architectural Highlights
 
-### 1. Virtual Office & 2D Pixel Engine
+### 1. Virtual Office and 2D Pixel Engine
 - **Six Specialized Engineering Rooms:**
   - Architecture Lab: System design and schema specification (Lead Architect: Ada).
   - Core Backend Lab: Asynchronous queue and API webhook processing (Backend Dev: Nova).
@@ -21,7 +33,7 @@ Created and maintained by [@berkaysahin-dev](https://github.com/berkaysahin-dev)
 - **Detailed Pixel Sprites:** Distinct character hairstyles, eye pupils, facial features, swivel chairs, desks, keyboards, and dual-monitor lighting.
 - **Real-Time Hover Tooltips:** Inspect per-agent token consumption, financial cost, active action, and model attribution directly on hover.
 
-### 2. Tiled Multi-Terminal Grid & Code Workspace
+### 2. Tiled Multi-Terminal Grid and Code Workspace
 - **Concurrent Agent Processes:** Three or more terminal panes streaming real-time logs, compilation outputs, and test runners concurrently.
 - **Interactive Shell Input:** Dedicated CLI input prompts per terminal supporting commands such as `test`, `build`, `scan`, and `clear`.
 - **Integrated Code Workspace:** Syntax-highlighted code editor with multi-file tabs, line numbering, and local modification saves.
