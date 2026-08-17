@@ -1,9 +1,29 @@
 {
   "name": "shaz-vision-ai-workspace",
   "version": "1.0.0",
-  "private": true,
+  "private": false,
   "type": "module",
   "description": "Shaz Vision AI Workspace - 2D Pixel-Art Virtual AI Company Desktop Application",
+  "author": "Berkay Şahin <berkay@shazvision.com> (https://shazvision.com)",
+  "license": "MIT",
+  "homepage": "https://shazvision.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/berkaysahin-dev/shaz-vision-ai-workspace.git"
+  },
+  "bugs": {
+    "url": "https://github.com/berkaysahin-dev/shaz-vision-ai-workspace/issues"
+  },
+  "keywords": [
+    "virtual-office",
+    "pixel-art",
+    "ai-agents",
+    "electron",
+    "react",
+    "vite",
+    "tailwind",
+    "shaz-vision"
+  ],
   "main": "electron/main.js",
   "scripts": {
     "dev": "vite",
