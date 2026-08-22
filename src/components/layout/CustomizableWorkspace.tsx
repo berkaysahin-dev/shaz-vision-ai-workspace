@@ -260,7 +260,7 @@ export const CustomizableWorkspace: React.FC = () => {
                 visiblePaneIds.map((paneId) => (
                   <div
                     key={paneId}
-                    className="flex-1 flex flex-col min-h-0 overflow-hidden relative"
+                    className="flex-1 flex flex-col min-h-0 min-w-0 w-full h-full overflow-hidden relative"
                   >
                     {/* Draggable Pane Header Grip Bar */}
                     <div
@@ -294,7 +294,7 @@ export const CustomizableWorkspace: React.FC = () => {
                     </div>
 
                     {/* Pane Content */}
-                    <div className="flex-1 flex min-h-0 overflow-hidden">
+                    <div className="flex-1 flex flex-col min-h-0 min-w-0 w-full h-full overflow-hidden">
                       {renderPaneContent(paneId)}
                     </div>
                   </div>

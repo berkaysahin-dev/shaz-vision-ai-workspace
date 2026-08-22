@@ -76,10 +76,9 @@ export const RightToolPane: React.FC = () => {
 
   return (
     <div
-      className="w-[330px] xl:w-[370px] border-l flex flex-col justify-between shrink-0 overflow-y-auto select-none transition-colors duration-300"
+      className="w-full h-full flex-1 flex flex-col justify-between overflow-y-auto select-none transition-colors duration-300 custom-scrollbar"
       style={{
         backgroundColor: 'var(--app-bg-panel, #10131D)',
-        borderColor: 'var(--app-border, #1E2333)',
       }}
     >
       {/* Right Sub-Header Tabs */}

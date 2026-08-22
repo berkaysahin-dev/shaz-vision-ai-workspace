@@ -67,10 +67,9 @@ export const CenterTerminalPane: React.FC = () => {
 
   return (
     <div
-      className="flex-1 flex flex-col border-r overflow-hidden select-none min-w-0 transition-colors duration-300"
+      className="w-full h-full flex-1 flex flex-col overflow-hidden select-none min-w-0 transition-colors duration-300"
       style={{
         backgroundColor: 'var(--app-bg-dark, #0A0C13)',
-        borderColor: 'var(--app-border, #1E2333)',
       }}
     >
       {/* Center Sub-Header Tabs */}

@@ -194,10 +194,9 @@ export const LeftOfficePane: React.FC = () => {
 
   return (
     <div
-      className="w-[370px] xl:w-[420px] border-r flex flex-col justify-between shrink-0 select-none overflow-y-auto font-mono text-slate-300 transition-colors duration-300"
+      className="w-full h-full flex-1 flex flex-col justify-between select-none overflow-y-auto font-mono text-slate-300 transition-colors duration-300 custom-scrollbar"
       style={{
         backgroundColor: 'var(--app-bg-panel, #0C0F17)',
-        borderColor: 'var(--app-border, #1C2234)',
       }}
     >
       <div className="p-3 space-y-3 flex-1 flex flex-col justify-between">
