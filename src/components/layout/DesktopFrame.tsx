@@ -13,6 +13,7 @@ import {
   Languages,
   Smartphone,
   Sparkles,
+  FolderOpen,
 } from 'lucide-react';
 import { useWorkspace } from '../../context/WorkspaceContext';
 import { TeamId } from '../../types';
@@ -32,6 +33,8 @@ export const DesktopFrame: React.FC<{ children: React.ReactNode }> = ({ children
     setIsCustomizerOpen,
     isSoundMuted,
     toggleSound,
+    projectDir,
+    selectProjectDirectory,
     stats,
   } = useWorkspace();
 
@@ -180,6 +183,21 @@ export const DesktopFrame: React.FC<{ children: React.ReactNode }> = ({ children
 
         {/* Right Actions */}
         <div className="flex items-center gap-2.5">
+          {/* Open Project Folder Button */}
+          <button
+            onClick={selectProjectDirectory}
+            title={`Aktif Proje: ${projectDir}`}
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-bold font-mono transition-colors hover:brightness-110"
+            style={{
+              backgroundColor: 'rgba(234, 179, 8, 0.15)',
+              borderColor: 'rgba(234, 179, 8, 0.4)',
+              color: '#FACC15',
+            }}
+          >
+            <FolderOpen className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">{projectDir.split('\\').pop() || 'Klasör Aç'}</span>
+          </button>
+
           {/* Mobile Companion Connect Button */}
           <button
             onClick={() => {

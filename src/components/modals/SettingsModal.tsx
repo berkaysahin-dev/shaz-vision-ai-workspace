@@ -26,10 +26,14 @@ import {
   Sliders,
   AlertTriangle,
   RotateCcw,
+  RefreshCw,
+  FolderOpen,
+  Sparkles,
 } from 'lucide-react';
 import { useWorkspace } from '../../context/WorkspaceContext';
 import { sound } from '../../services/soundEngine';
 import { THEMES, ThemeId } from '../../services/themeManager';
+import { aiEngine, AIProviderId, AISettings } from '../../services/aiEngine';
 
 type SettingsTab =
   | 'general'
@@ -54,11 +58,20 @@ export const SettingsModal: React.FC = () => {
     setCurrentTheme,
     isSoundMuted,
     toggleSound,
+    projectDir,
+    setProjectDir,
+    selectProjectDirectory,
   } = useWorkspace();
 
   const [activeTab, setActiveTab] = useState<SettingsTab>('appearance');
   const [selectedThemeDraft, setSelectedThemeDraft] = useState<ThemeId>(currentTheme);
   const [savedSuccess, setSavedSuccess] = useState(false);
+
+  // AI & LLM Engine Settings State
+  const [aiSettings, setAiSettings] = useState<AISettings>(() => aiEngine.getSettings());
+  const [ollamaStatus, setOllamaStatus] = useState<'idle' | 'checking' | 'connected' | 'error'>('idle');
+  const [detectedOllamaModels, setDetectedOllamaModels] = useState<string[]>([]);
+  const [ollamaErrorMsg, setOllamaErrorMsg] = useState<string>('');
 
   // Form states for all tabs
   const [workspaceName, setWorkspaceName] = useState('Shaz Vision AI Workspace');
@@ -76,9 +89,36 @@ export const SettingsModal: React.FC = () => {
   React.useEffect(() => {
     if (isSettingsOpen) {
       setSelectedThemeDraft(currentTheme);
+      setAiSettings(aiEngine.getSettings());
       setSavedSuccess(false);
     }
   }, [isSettingsOpen, currentTheme]);
+
+  const handleTestOllama = async () => {
+    sound.playClick();
+    setOllamaStatus('checking');
+    setOllamaErrorMsg('');
+    const res = await aiEngine.testOllamaConnection(aiSettings.ollamaEndpoint);
+    if (res.success) {
+      sound.playSuccess();
+      setOllamaStatus('connected');
+      setDetectedOllamaModels(res.models);
+      if (res.models.length > 0 && !res.models.includes(aiSettings.ollamaModel)) {
+        setAiSettings((prev) => ({ ...prev, ollamaModel: res.models[0] }));
+      }
+    } else {
+      setOllamaStatus('error');
+      setOllamaErrorMsg(res.error || 'Connection failed');
+    }
+  };
+
+  const handleSaveAISetting = (key: keyof AISettings, value: any) => {
+    setAiSettings((prev) => {
+      const updated = { ...prev, [key]: value };
+      aiEngine.updateSettings(updated);
+      return updated;
+    });
+  };
 
   if (!isSettingsOpen) return null;
 
@@ -662,31 +702,203 @@ export const SettingsModal: React.FC = () => {
                 TAB 5: AI MOTORLARI (MODELS)
                ========================================================================= */}
             {activeTab === 'models' && (
-              <div className="space-y-3 text-xs font-mono">
-                <div className="font-bold text-slate-100 text-sm mb-2">
-                  {language === 'tr' ? 'AI Sağlayıcı API Anahtarları' : 'AI Provider API Keys'}
+              <div className="space-y-4 text-xs font-mono">
+                <div>
+                  <div className="font-bold text-slate-100 text-sm mb-1 flex items-center justify-between">
+                    <span>{language === 'tr' ? 'Aktif Yapay Zeka Motoru' : 'Active AI Engine Provider'}</span>
+                    <span className="text-[10px] text-cyan-300 font-normal">
+                      {aiSettings.activeProvider.toUpperCase()} ACTIVE
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-400">
+                    {language === 'tr'
+                      ? 'Ajanların ve Agent X orkestrasyonunun kullandığı yapay zeka sağlayıcısını seçin.'
+                      : 'Select the LLM provider used by all autonomous agents and Agent X.'}
+                  </p>
                 </div>
-                {[
-                  { name: 'Anthropic Claude (3.5 Sonnet / Opus)', env: 'ANTHROPIC_API_KEY', val: 'sk-ant-api03-••••••••••••••••' },
-                  { name: 'OpenAI (GPT-4o / GPT-5-Codex)', env: 'OPENAI_API_KEY', val: 'sk-proj-••••••••••••••••' },
-                  { name: 'Google Gemini (1.5 Pro / Flash)', env: 'GEMINI_API_KEY', val: 'AIzaSy••••••••••••••••' },
-                  { name: 'DeepSeek (V3 / R1)', env: 'DEEPSEEK_API_KEY', val: 'sk-dpsk-••••••••••••••••' },
-                  { name: 'Local Ollama / vLLM Endpoint', env: 'OLLAMA_ENDPOINT', val: 'http://localhost:11434/v1' },
-                ].map((prov, idx) => (
-                  <div key={idx} className="p-3 rounded-xl bg-[#151722] border border-[#222736] space-y-1.5">
+
+                {/* Provider Selector Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  {[
+                    { id: 'ollama' as AIProviderId, name: 'Ollama', tag: 'Local & Free', color: 'text-emerald-400 border-emerald-500/40' },
+                    { id: 'gemini' as AIProviderId, name: 'Google Gemini', tag: 'Cloud API', color: 'text-cyan-400 border-cyan-500/40' },
+                    { id: 'anthropic' as AIProviderId, name: 'Claude', tag: 'Anthropic', color: 'text-purple-400 border-purple-500/40' },
+                    { id: 'openai' as AIProviderId, name: 'OpenAI', tag: 'GPT-4o / Codex', color: 'text-green-400 border-green-500/40' },
+                    { id: 'deepseek' as AIProviderId, name: 'DeepSeek', tag: 'V3 / Coder', color: 'text-blue-400 border-blue-500/40' },
+                    { id: 'groq' as AIProviderId, name: 'Groq LPU', tag: 'Ultra Fast', color: 'text-orange-400 border-orange-500/40' },
+                    { id: 'simulated' as AIProviderId, name: 'Simulated', tag: 'Offline Fallback', color: 'text-pink-400 border-pink-500/40' },
+                  ].map((prov) => {
+                    const isSelected = aiSettings.activeProvider === prov.id;
+                    return (
+                      <button
+                        key={prov.id}
+                        onClick={() => {
+                          sound.playClick();
+                          handleSaveAISetting('activeProvider', prov.id);
+                        }}
+                        className={`p-2.5 rounded-xl border text-left flex flex-col justify-between transition-all ${
+                          isSelected
+                            ? 'bg-[#1F2538] border-cyan-400 shadow-md ring-1 ring-cyan-400'
+                            : 'bg-[#151722] border-[#222736] hover:border-slate-600'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-slate-100">{prov.name}</span>
+                          {isSelected && <Check className="w-3.5 h-3.5 text-cyan-400" />}
+                        </div>
+                        <span className={`text-[9px] mt-1 font-bold ${prov.color.split(' ')[0]}`}>
+                          {prov.tag}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* 1. Ollama Local Settings */}
+                {aiSettings.activeProvider === 'ollama' && (
+                  <div className="p-4 rounded-xl bg-[#151722] border border-emerald-500/30 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Cpu className="w-4 h-4 text-emerald-400" />
+                        <span className="font-bold text-slate-100">Ollama Yerel Yapay Zeka Yapılandırması</span>
+                      </div>
+                      <button
+                        onClick={handleTestOllama}
+                        disabled={ollamaStatus === 'checking'}
+                        className="px-2.5 py-1 rounded bg-emerald-950 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-300 text-[10px] font-bold flex items-center gap-1 transition-colors"
+                      >
+                        <RefreshCw className={`w-3 h-3 ${ollamaStatus === 'checking' ? 'animate-spin' : ''}`} />
+                        <span>{language === 'tr' ? 'Bağlantıyı Test Et & Modelleri Çek' : 'Test & Detect Models'}</span>
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-[10px] text-slate-400 block mb-1">Ollama Endpoint URL</label>
+                        <input
+                          type="text"
+                          value={aiSettings.ollamaEndpoint}
+                          onChange={(e) => handleSaveAISetting('ollamaEndpoint', e.target.value)}
+                          placeholder="http://localhost:11434"
+                          className="w-full px-2.5 py-1.5 bg-[#0D0F15] border border-[#232838] rounded-lg text-slate-200 text-xs focus:outline-none focus:border-emerald-500 font-mono"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] text-slate-400 block mb-1">Seçili Model</label>
+                        {detectedOllamaModels.length > 0 ? (
+                          <select
+                            value={aiSettings.ollamaModel}
+                            onChange={(e) => handleSaveAISetting('ollamaModel', e.target.value)}
+                            className="w-full px-2.5 py-1.5 bg-[#0D0F15] border border-[#232838] rounded-lg text-slate-200 text-xs focus:outline-none focus:border-emerald-500 font-mono"
+                          >
+                            {detectedOllamaModels.map((m) => (
+                              <option key={m} value={m}>
+                                {m}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <input
+                            type="text"
+                            value={aiSettings.ollamaModel}
+                            onChange={(e) => handleSaveAISetting('ollamaModel', e.target.value)}
+                            placeholder="llama3:latest"
+                            className="w-full px-2.5 py-1.5 bg-[#0D0F15] border border-[#232838] rounded-lg text-slate-200 text-xs focus:outline-none focus:border-emerald-500 font-mono"
+                          />
+                        )}
+                      </div>
+                    </div>
+
+                    {ollamaStatus === 'connected' && (
+                      <div className="p-2 rounded bg-emerald-950/60 border border-emerald-500/40 text-[10px] text-emerald-300 flex items-center justify-between">
+                        <span>✓ Ollama bağlantısı başarılı! {detectedOllamaModels.length} model tespit edildi.</span>
+                        <span className="font-bold">LIVE</span>
+                      </div>
+                    )}
+
+                    {ollamaStatus === 'error' && (
+                      <div className="p-2 rounded bg-red-950/60 border border-red-500/40 text-[10px] text-red-300">
+                        ✕ Ollama bağlantı hatası: {ollamaErrorMsg}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* 2. Cloud API Keys Form */}
+                <div className="space-y-2.5">
+                  <div className="text-[11px] font-bold text-slate-300 uppercase tracking-wider">
+                    {language === 'tr' ? 'Bulut API Anahtarları' : 'Cloud API Credentials'}
+                  </div>
+
+                  {/* Gemini */}
+                  <div className="p-3 rounded-xl bg-[#151722] border border-[#222736] space-y-1.5">
                     <div className="flex justify-between items-center">
-                      <span className="font-bold text-slate-200">{prov.name}</span>
-                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-950 text-emerald-400 border border-emerald-500/30">
-                        Connected
+                      <span className="font-bold text-slate-200">Google Gemini API Key</span>
+                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyan-950 text-cyan-400 border border-cyan-500/30">
+                        {aiSettings.geminiKey ? 'Configured' : 'Optional'}
                       </span>
                     </div>
                     <input
                       type="password"
-                      defaultValue={prov.val}
-                      className="w-full px-2.5 py-1 bg-[#0D0F15] border border-[#232838] rounded-lg text-slate-300 outline-none text-[11px]"
+                      value={aiSettings.geminiKey}
+                      onChange={(e) => handleSaveAISetting('geminiKey', e.target.value)}
+                      placeholder="AIzaSy••••••••••••••••"
+                      className="w-full px-2.5 py-1.5 bg-[#0D0F15] border border-[#232838] rounded-lg text-slate-300 text-xs outline-none focus:border-cyan-500"
                     />
                   </div>
-                ))}
+
+                  {/* OpenAI */}
+                  <div className="p-3 rounded-xl bg-[#151722] border border-[#222736] space-y-1.5">
+                    <div className="flex justify-between items-center">
+                      <span className="font-bold text-slate-200">OpenAI API Key</span>
+                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-green-950 text-green-400 border border-green-500/30">
+                        {aiSettings.openaiKey ? 'Configured' : 'Optional'}
+                      </span>
+                    </div>
+                    <input
+                      type="password"
+                      value={aiSettings.openaiKey}
+                      onChange={(e) => handleSaveAISetting('openaiKey', e.target.value)}
+                      placeholder="sk-proj-••••••••••••••••"
+                      className="w-full px-2.5 py-1.5 bg-[#0D0F15] border border-[#232838] rounded-lg text-slate-300 text-xs outline-none focus:border-green-500"
+                    />
+                  </div>
+
+                  {/* Anthropic Claude */}
+                  <div className="p-3 rounded-xl bg-[#151722] border border-[#222736] space-y-1.5">
+                    <div className="flex justify-between items-center">
+                      <span className="font-bold text-slate-200">Anthropic Claude API Key</span>
+                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-purple-950 text-purple-400 border border-purple-500/30">
+                        {aiSettings.anthropicKey ? 'Configured' : 'Optional'}
+                      </span>
+                    </div>
+                    <input
+                      type="password"
+                      value={aiSettings.anthropicKey}
+                      onChange={(e) => handleSaveAISetting('anthropicKey', e.target.value)}
+                      placeholder="sk-ant-api03-••••••••••••••••"
+                      className="w-full px-2.5 py-1.5 bg-[#0D0F15] border border-[#232838] rounded-lg text-slate-300 text-xs outline-none focus:border-purple-500"
+                    />
+                  </div>
+
+                  {/* DeepSeek */}
+                  <div className="p-3 rounded-xl bg-[#151722] border border-[#222736] space-y-1.5">
+                    <div className="flex justify-between items-center">
+                      <span className="font-bold text-slate-200">DeepSeek API Key</span>
+                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-blue-950 text-blue-400 border border-blue-500/30">
+                        {aiSettings.deepseekKey ? 'Configured' : 'Optional'}
+                      </span>
+                    </div>
+                    <input
+                      type="password"
+                      value={aiSettings.deepseekKey}
+                      onChange={(e) => handleSaveAISetting('deepseekKey', e.target.value)}
+                      placeholder="sk-dpsk-••••••••••••••••"
+                      className="w-full px-2.5 py-1.5 bg-[#0D0F15] border border-[#232838] rounded-lg text-slate-300 text-xs outline-none focus:border-blue-500"
+                    />
+                  </div>
+                </div>
               </div>
             )}
 

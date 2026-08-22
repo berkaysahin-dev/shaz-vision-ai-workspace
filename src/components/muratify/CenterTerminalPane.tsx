@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Minus, Square, ExternalLink, Columns, Terminal, FileCode, Plus, Trash2, Save, Check } from 'lucide-react';
+import { Minus, Square, ExternalLink, Columns, Terminal, FileCode, Plus, Trash2, Save, Check, FolderOpen } from 'lucide-react';
 import { useWorkspace } from '../../context/WorkspaceContext';
 import { sound } from '../../services/soundEngine';
+import { terminalBridge } from '../../services/terminalBridge';
 
 export const CenterTerminalPane: React.FC = () => {
   const {
@@ -16,6 +17,8 @@ export const CenterTerminalPane: React.FC = () => {
     selectedFileId,
     setSelectedFileId,
     updateFileContent,
+    projectDir,
+    selectProjectDirectory,
     t,
   } = useWorkspace();
 
@@ -46,23 +49,28 @@ export const CenterTerminalPane: React.FC = () => {
     if (!cmd || !cmd.trim()) return;
 
     sound.playTerminalTick();
-    addTerminalLine(paneId, `$ ${cmd}`);
     setInputCommands((prev) => ({ ...prev, [paneId]: '' }));
 
-    setTimeout(() => {
-      const clean = cmd.trim().toLowerCase();
-      if (clean === 'test') {
-        addTerminalLine(paneId, '✓ 14/14 tests passed in 0.84s (Vitest)');
-      } else if (clean === 'build') {
-        addTerminalLine(paneId, '✓ Next.js 15 SSR bundle compiled (93.1 kB)');
-      } else if (clean === 'scan') {
-        addTerminalLine(paneId, '🛡 OWASP Security Audit: 0 vulnerabilities found');
-      } else if (clean === 'clear') {
-        clearTerminalPane(paneId);
-      } else {
-        addTerminalLine(paneId, `+ process executed: ${cmd}`);
-      }
-    }, 400);
+    if (cmd.trim().toLowerCase() === 'clear' || cmd.trim().toLowerCase() === 'cls') {
+      clearTerminalPane(paneId);
+      return;
+    }
+
+    terminalBridge.executeCommand({
+      cmd,
+      cwd: projectDir,
+      onData: (chunk, isError) => {
+        const lines = chunk.split('\n').filter((l) => l.length > 0);
+        lines.forEach((line) => {
+          addTerminalLine(paneId, isError ? `\x1b[31m${line}\x1b[0m` : line);
+        });
+      },
+      onExit: (code) => {
+        if (code === 0) {
+          sound.playSuccess();
+        }
+      },
+    });
   };
 
   return (
@@ -117,6 +125,15 @@ export const CenterTerminalPane: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2 text-slate-500">
+          <button
+            onClick={selectProjectDirectory}
+            title="Switch Workspace Directory"
+            className="hidden md:flex items-center gap-1 px-2 py-0.5 rounded text-[10px] bg-slate-900 border border-slate-700 text-slate-300 hover:text-cyan-300 hover:border-cyan-500/40 transition-colors"
+          >
+            <FolderOpen className="w-3 h-3 text-amber-400" />
+            <span className="max-w-[140px] truncate font-mono">{projectDir.split('\\').pop() || projectDir}</span>
+          </button>
+
           <button
             onClick={addTerminalPane}
             title={t.newShell}

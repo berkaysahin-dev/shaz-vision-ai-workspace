@@ -29,6 +29,8 @@ import {
 import { sound } from '../services/soundEngine';
 import { Language, translations } from '../services/i18n';
 import { ThemeId, THEMES, applyThemeToDOM } from '../services/themeManager';
+import { aiEngine } from '../services/aiEngine';
+import { terminalBridge } from '../services/terminalBridge';
 
 interface WorkspaceContextType {
   language: Language;
@@ -88,6 +90,9 @@ interface WorkspaceContextType {
   setIsCustomizerOpen: (open: boolean) => void;
   updateAgentCustomization: (agentId: AgentId, data: Partial<Agent>) => void;
   isMobileCompanionMode: boolean;
+  projectDir: string;
+  setProjectDir: (dir: string) => void;
+  selectProjectDirectory: () => Promise<void>;
   voiceState: GlobalVoiceState;
   globalPrompt: string;
   setGlobalPrompt: (prompt: string) => void;
@@ -339,42 +344,105 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
   };
 
-  const executeGlobalPrompt = (prompt: string) => {
+  const [projectDir, setProjectDirState] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('shaz_project_dir') || 'C:\\Projects\\shaz-vision-workspace';
+    }
+    return 'C:\\Projects\\shaz-vision-workspace';
+  });
+
+  const setProjectDir = (dir: string) => {
+    setProjectDirState(dir);
+    if (typeof window !== 'undefined') {
+      try { localStorage.setItem('shaz_project_dir', dir); } catch (e) {}
+    }
+  };
+
+  const selectProjectDirectory = async () => {
+    sound.playClick();
+    const chosen = await terminalBridge.selectProjectDirectory();
+    if (chosen) {
+      sound.playSuccess();
+      setProjectDir(chosen);
+      addTerminalLine('term-1', `+ Switched workspace directory to: ${chosen}`);
+      setNotifications((prev) => [
+        {
+          id: `notif-${Date.now()}`,
+          title: language === 'tr' ? 'Çalışma Alanı Değiştirildi' : 'Workspace Directory Switched',
+          message: chosen,
+          timestamp: 'Just now',
+          type: 'success',
+          read: false,
+        },
+        ...prev,
+      ]);
+    }
+  };
+
+  const executeGlobalPrompt = async (prompt: string) => {
     if (!prompt.trim()) return;
     sound.playAgentPing();
     
     setVoiceState({
       isSpeaking: true,
-      speakingAgentName: 'AGENT X',
-      lastAction: `prompt dispatched: "${prompt.slice(0, 32)}..."`,
+      speakingAgentName: 'ADA (LEAD ARCHITECT)',
+      lastAction: `orchestrating prompt: "${prompt.slice(0, 32)}..."`,
       transcript: prompt,
     });
 
-    setTimeout(() => {
-      sound.playAgentPing();
-      setAgents((prev) => ({
-        ...prev,
-        rio: { ...prev.rio, state: 'RUNNING', speechBubble: 'generating new landing hero' },
-        nova: { ...prev.nova, state: 'RUNNING', speechBubble: 'updating routing endpoints' },
-        emre: { ...prev.emre, state: 'WORKING', speechBubble: 'building OAuth integration' },
-      }));
+    // 1. Lead Orchestration via AI Engine
+    const plan = await aiEngine.orchestratePrompt(prompt);
 
-      addTerminalLine('term-1', `+ [Prompt Engine]: Dispatched "${prompt}"`);
-      addTerminalLine('term-1', `reading src/components/LandingHero.tsx...`);
-    }, 1000);
+    // Update Ada and crew states
+    setAgents((prev) => ({
+      ...prev,
+      ada: {
+        ...prev.ada,
+        state: 'WORKING',
+        speechBubble: plan.leadThought,
+      },
+      nova: {
+        ...prev.nova,
+        state: 'RUNNING',
+        speechBubble: 'implementing backend handlers',
+      },
+      kai: {
+        ...prev.kai,
+        state: 'RUNNING',
+        speechBubble: 'syncing UI components',
+      },
+      selin: {
+        ...prev.selin,
+        state: 'TESTING',
+        speechBubble: 'running regression tests',
+      },
+    }));
 
-    setTimeout(() => {
-      sound.playTerminalTick();
-      addTerminalLine('term-3', `+ testing DOM render for updated landing hero`);
-      addTerminalLine('term-3', `✓ 16/16 visual regression snapshots matched`);
-      setBrowserUrl('https://preview.shazvision.local/landing');
-    }, 2500);
+    addTerminalLine('term-1', `[AI Orchestrator] Ada: "${plan.leadThought}"`);
 
+    // 2. Execute steps in terminal bridge
+    plan.steps.forEach((step, idx) => {
+      setTimeout(() => {
+        if (step.suggestedCommand) {
+          sound.playTerminalTick();
+          terminalBridge.executeCommand({
+            cmd: step.suggestedCommand,
+            cwd: projectDir,
+            onData: (chunk) => {
+              addTerminalLine('term-1', chunk.trimEnd());
+            },
+          });
+        }
+      }, (idx + 1) * 800);
+    });
+
+    // 3. Mark complete
     setTimeout(() => {
       sound.playSuccess();
       setVoiceState((prev) => ({
         ...prev,
-        lastAction: `completed -> landing hero refreshed`,
+        speakingAgentName: 'AGENT X',
+        lastAction: `completed -> task dispatched to crew`,
       }));
 
       setNotifications((prev) => [
@@ -388,7 +456,7 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         },
         ...prev,
       ]);
-    }, 4500);
+    }, (plan.steps.length + 1) * 900);
   };
 
   useEffect(() => {
@@ -467,6 +535,9 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         setIsCustomizerOpen,
         updateAgentCustomization,
         isMobileCompanionMode,
+        projectDir,
+        setProjectDir,
+        selectProjectDirectory,
         voiceState,
         globalPrompt,
         setGlobalPrompt,
