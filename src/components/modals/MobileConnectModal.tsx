@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useWorkspace } from '../../context/WorkspaceContext';
 import { mobileBridge, MobileDevice } from '../../services/mobileBridge';
 import { sound } from '../../services/soundEngine';
+import QRCode from 'qrcode';
 import { 
   X, 
   Smartphone, 
@@ -13,7 +14,8 @@ import {
   Check, 
   RefreshCw,
   Radio,
-  Lock
+  Lock,
+  Edit2
 } from 'lucide-react';
 
 interface MobileConnectModalProps {
@@ -25,6 +27,38 @@ export const MobileConnectModal: React.FC<MobileConnectModalProps> = ({ isOpen, 
   const [pairingCode, setPairingCode] = useState(mobileBridge.getPairingCode());
   const [copied, setCopied] = useState(false);
   const [connectedDevices, setConnectedDevices] = useState<MobileDevice[]>(mobileBridge.getConnectedDevices());
+  
+  // Local network IP state (defaults to detected hostname or common local Wi-Fi IP)
+  const defaultHost = typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1'
+    ? window.location.hostname
+    : '192.168.1.106';
+
+  const [hostIp, setHostIp] = useState(defaultHost);
+  const [port, setPort] = useState('5173');
+  const [qrDataUrl, setQrDataUrl] = useState<string>('');
+
+  const mobileUrl = `http://${hostIp}:${port}/?mode=mobile`;
+
+  // Generate 100% Real Scannable QR Code
+  useEffect(() => {
+    QRCode.toDataURL(
+      mobileUrl,
+      {
+        width: 320,
+        margin: 1,
+        color: {
+          dark: '#0A0E17',
+          light: '#FFFFFF',
+        },
+        errorCorrectionLevel: 'M',
+      },
+      (err, url) => {
+        if (!err && url) {
+          setQrDataUrl(url);
+        }
+      }
+    );
+  }, [mobileUrl]);
 
   useEffect(() => {
     if (isOpen) {
@@ -33,9 +67,6 @@ export const MobileConnectModal: React.FC<MobileConnectModalProps> = ({ isOpen, 
   }, [isOpen]);
 
   if (!isOpen) return null;
-
-  const currentOrigin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173';
-  const mobileUrl = `${currentOrigin}/?mode=mobile`;
 
   const handleCopyUrl = () => {
     sound.playClick();
@@ -69,7 +100,7 @@ export const MobileConnectModal: React.FC<MobileConnectModalProps> = ({ isOpen, 
                 MOBILE COMPANION & REMOTE GATEWAY
               </h2>
               <p className="text-[11px] text-slate-400">
-                Connect your phone as an AI office remote controller & read-along companion
+                Scan with your phone camera to connect as a live controller & read-along screen
               </p>
             </div>
           </div>
@@ -85,30 +116,35 @@ export const MobileConnectModal: React.FC<MobileConnectModalProps> = ({ isOpen, 
         {/* Modal Content */}
         <div className="p-6 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-            {/* QR Code Card */}
+            {/* Real QR Code Card */}
             <div className="bg-[#090C14] border border-[#1E273A] rounded-2xl p-5 flex flex-col items-center justify-center text-center shadow-inner relative group">
-              <div className="w-44 h-44 bg-white p-3 rounded-xl shadow-lg flex items-center justify-center relative overflow-hidden">
-                {/* SVG Pixel QR Code Simulation */}
-                <svg viewBox="0 0 100 100" className="w-full h-full">
-                  <path
-                    d="M10 10h30v30h-30z M15 15h20v20h-20z M60 10h30v30h-30z M65 15h20v20h-20z M10 60h30v30h-30z M15 65h20v20h-20z M45 10h10v10h-10z M45 30h10v20h-10z M45 60h10v10h-10z M60 45h20v10h-20z M60 60h10v20h-10z M80 60h10v30h-10z M20 45h20v10h-20z M75 75h15v15h-15z"
-                    fill="#0F172A"
+              <div className="w-48 h-48 bg-white p-2.5 rounded-2xl shadow-xl flex items-center justify-center relative overflow-hidden border-2 border-cyan-500/40">
+                {qrDataUrl ? (
+                  <img
+                    src={qrDataUrl}
+                    alt="Mobile Companion QR Code"
+                    className="w-full h-full object-contain rounded-lg"
                   />
-                  {/* Central Cyber Logo */}
-                  <rect x="42" y="42" width="16" height="16" fill="#00E5FF" rx="3" />
-                  <circle cx="50" cy="50" r="4" fill="#0F172A" />
-                </svg>
+                ) : (
+                  <div className="text-slate-900 text-xs font-bold animate-pulse">
+                    Generating QR Code...
+                  </div>
+                )}
               </div>
 
-              <div className="mt-3 text-[11px] text-slate-400">
-                Scan with your phone's camera on the same Wi-Fi network
+              <div className="mt-3 text-[11px] text-cyan-300 font-bold flex items-center gap-1.5">
+                <QrCode className="w-3.5 h-3.5" />
+                <span>Point your phone camera to scan</span>
+              </div>
+              <div className="text-[9px] text-slate-500 mt-0.5">
+                Instant connection over your local Wi-Fi network
               </div>
             </div>
 
-            {/* Pairing Details & Status */}
-            <div className="space-y-4">
-              {/* Pairing Code */}
-              <div className="bg-[#090C14] border border-[#1E273A] rounded-xl p-4">
+            {/* Pairing Details & Network Controls */}
+            <div className="space-y-3.5">
+              {/* Pairing PIN */}
+              <div className="bg-[#090C14] border border-[#1E273A] rounded-xl p-3.5">
                 <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1 flex justify-between items-center">
                   <span>ONE-TIME PAIRING PIN</span>
                   <button 
@@ -125,21 +161,45 @@ export const MobileConnectModal: React.FC<MobileConnectModalProps> = ({ isOpen, 
                 </div>
               </div>
 
-              {/* Network Address */}
-              <div className="bg-[#090C14] border border-[#1E273A] rounded-xl p-4">
+              {/* Local IP Address & Port Switcher */}
+              <div className="bg-[#090C14] border border-[#1E273A] rounded-xl p-3.5 space-y-2">
+                <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider flex justify-between items-center">
+                  <span>HOST IP & PORT</span>
+                  <span className="text-[9px] text-slate-400">Wi-Fi Gateway</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <input
+                    type="text"
+                    value={hostIp}
+                    onChange={(e) => setHostIp(e.target.value)}
+                    placeholder="192.168.1.xxx"
+                    className="flex-1 bg-[#131722] border border-[#2A344D] rounded-lg px-2.5 py-1 text-xs text-slate-200 font-mono focus:outline-none focus:border-cyan-500"
+                  />
+                  <span className="text-slate-600">:</span>
+                  <input
+                    type="text"
+                    value={port}
+                    onChange={(e) => setPort(e.target.value)}
+                    className="w-16 bg-[#131722] border border-[#2A344D] rounded-lg px-2 py-1 text-xs text-slate-200 font-mono text-center focus:outline-none focus:border-cyan-500"
+                  />
+                </div>
+              </div>
+
+              {/* Direct Link Copy */}
+              <div className="bg-[#090C14] border border-[#1E273A] rounded-xl p-3.5">
                 <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">
-                  DIRECT LOCAL URL
+                  DIRECT COMPANION URL
                 </div>
                 <div className="flex items-center gap-2">
                   <input
                     type="text"
                     readOnly
                     value={mobileUrl}
-                    className="flex-1 bg-[#131722] border border-[#2A344D] rounded-lg px-2.5 py-1.5 text-xs text-slate-300 font-mono focus:outline-none"
+                    className="flex-1 bg-[#131722] border border-[#2A344D] rounded-lg px-2.5 py-1 text-xs text-slate-300 font-mono focus:outline-none truncate"
                   />
                   <button
                     onClick={handleCopyUrl}
-                    className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-1"
+                    className="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-1 shrink-0"
                   >
                     {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                     {copied ? 'Copied' : 'Copy'}
@@ -148,9 +208,9 @@ export const MobileConnectModal: React.FC<MobileConnectModalProps> = ({ isOpen, 
               </div>
 
               {/* Security & Private Network Badge */}
-              <div className="flex items-center gap-2 p-3 bg-emerald-950/40 border border-emerald-500/30 rounded-xl text-[11px] text-emerald-300">
+              <div className="flex items-center gap-2 p-2.5 bg-emerald-950/40 border border-emerald-500/30 rounded-xl text-[10px] text-emerald-300">
                 <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Encrypted local bridge. No keys or code leave your local machine.</span>
+                <span>Encrypted local bridge. Zero code or keys leave your local machine.</span>
               </div>
             </div>
           </div>
@@ -169,7 +229,7 @@ export const MobileConnectModal: React.FC<MobileConnectModalProps> = ({ isOpen, 
               {connectedDevices.map((dev) => (
                 <div 
                   key={dev.id}
-                  className="flex items-center justify-between p-3 bg-[#090C14] border border-[#1E273A] rounded-xl text-xs"
+                  className="flex items-center justify-between p-2.5 bg-[#090C14] border border-[#1E273A] rounded-xl text-xs"
                 >
                   <div className="flex items-center gap-2.5">
                     <Smartphone className="w-4 h-4 text-slate-400" />
@@ -195,7 +255,7 @@ export const MobileConnectModal: React.FC<MobileConnectModalProps> = ({ isOpen, 
         <div className="flex items-center justify-between px-6 py-4 border-t border-[#1E273A] bg-[#111624]">
           <button
             onClick={handleOpenCompanionTab}
-            className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-cyan-300 text-xs font-bold rounded-xl border border-cyan-500/30 transition-all shadow-md"
+            className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-cyan-300 text-xs font-bold rounded-xl border border-cyan-500/30 transition-colors shadow-md"
           >
             <ExternalLink className="w-3.5 h-3.5" />
             Launch Mobile Companion Preview (Window)
@@ -203,7 +263,7 @@ export const MobileConnectModal: React.FC<MobileConnectModalProps> = ({ isOpen, 
 
           <button
             onClick={() => { sound.playClick(); onClose(); }}
-            className="px-5 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white text-xs font-bold rounded-xl shadow-lg transition-all"
+            className="px-5 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white text-xs font-bold rounded-xl shadow-lg transition-colors"
           >
             Done
           </button>

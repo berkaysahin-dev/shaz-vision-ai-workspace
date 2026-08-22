@@ -187,7 +187,7 @@ export const DesktopFrame: React.FC<{ children: React.ReactNode }> = ({ children
               setIsMobileModalOpen(true);
             }}
             title="Telefondan Bağlan / Mobile Companion Connect"
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-bold font-mono transition-all hover:scale-105"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-bold font-mono transition-colors hover:brightness-110"
             style={{
               backgroundColor: 'rgba(6, 182, 212, 0.15)',
               borderColor: 'rgba(6, 182, 212, 0.4)',
@@ -205,7 +205,7 @@ export const DesktopFrame: React.FC<{ children: React.ReactNode }> = ({ children
               setIsCustomizerOpen(true);
             }}
             title="Karakter & Pixel Art Stüdyosu / Character Customizer"
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-bold font-mono transition-all hover:scale-105"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-bold font-mono transition-colors hover:brightness-110"
             style={{
               backgroundColor: 'rgba(168, 85, 247, 0.15)',
               borderColor: 'rgba(168, 85, 247, 0.4)',
@@ -296,7 +296,7 @@ export const DesktopFrame: React.FC<{ children: React.ReactNode }> = ({ children
               setIsSettingsOpen(true);
             }}
             title="Supervisor Profile (Berkay Şahin)"
-            className="w-7 h-7 rounded-full border flex items-center justify-center text-xs font-bold cursor-pointer transition-all hover:scale-105"
+            className="w-7 h-7 rounded-full border flex items-center justify-center text-xs font-bold cursor-pointer transition-colors hover:brightness-110"
             style={{
               backgroundColor: 'var(--app-badge-bg, rgba(124, 58, 237, 0.3))',
               borderColor: 'var(--app-accent, #7C3AED)',
