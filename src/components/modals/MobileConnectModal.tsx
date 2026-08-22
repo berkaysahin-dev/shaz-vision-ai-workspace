@@ -34,7 +34,7 @@ export const MobileConnectModal: React.FC<MobileConnectModalProps> = ({ isOpen, 
 
   if (!isOpen) return null;
 
-  const currentOrigin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
+  const currentOrigin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173';
   const mobileUrl = `${currentOrigin}/?mode=mobile`;
 
   const handleCopyUrl = () => {

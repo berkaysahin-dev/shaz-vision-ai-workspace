@@ -107,7 +107,7 @@ npm install
 ```bash
 npm run dev
 ```
-Open `http://localhost:3000` in your web browser.
+Open `http://localhost:5173` in your web browser.
 
 ### 4. Run as Native Desktop Application (Electron)
 ```bash
@@ -117,7 +117,7 @@ npm run electron
 ### 5. Launch Mobile Companion Mode
 On your smartphone connected to the same Wi-Fi or VPN, open:
 ```
-http://<YOUR_LOCAL_IP>:3000/?mode=mobile
+http://<YOUR_LOCAL_IP>:5173/?mode=mobile
 ```
 Or click **"Mobil Bağlan"** in the top bar to scan the QR code!
 
