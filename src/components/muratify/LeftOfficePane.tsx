@@ -35,6 +35,11 @@ const DESK_POSITIONS: Record<AgentId, Position> = {
   max: { x: 18, y: 74 },
   lux: { x: 50, y: 74 },
   sol: { x: 80, y: 74 },
+  vesper: { x: 34, y: 22 },
+  atlas: { x: 62, y: 38 },
+  nyx: { x: 34, y: 74 },
+  echo: { x: 66, y: 74 },
+  zoe: { x: 86, y: 22 },
 };
 
 export const LeftOfficePane: React.FC = () => {

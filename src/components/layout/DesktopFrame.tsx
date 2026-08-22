@@ -11,6 +11,8 @@ import {
   Volume2,
   VolumeX,
   Languages,
+  Smartphone,
+  Sparkles,
 } from 'lucide-react';
 import { useWorkspace } from '../../context/WorkspaceContext';
 import { TeamId } from '../../types';
@@ -26,6 +28,8 @@ export const DesktopFrame: React.FC<{ children: React.ReactNode }> = ({ children
     setIsNotificationOpen,
     setIsSettingsOpen,
     setIsSearchOpen,
+    setIsMobileModalOpen,
+    setIsCustomizerOpen,
     isSoundMuted,
     toggleSound,
     stats,
@@ -176,6 +180,42 @@ export const DesktopFrame: React.FC<{ children: React.ReactNode }> = ({ children
 
         {/* Right Actions */}
         <div className="flex items-center gap-2.5">
+          {/* Mobile Companion Connect Button */}
+          <button
+            onClick={() => {
+              sound.playClick();
+              setIsMobileModalOpen(true);
+            }}
+            title="Telefondan Bağlan / Mobile Companion Connect"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-bold font-mono transition-all hover:scale-105"
+            style={{
+              backgroundColor: 'rgba(6, 182, 212, 0.15)',
+              borderColor: 'rgba(6, 182, 212, 0.4)',
+              color: '#22D3EE',
+            }}
+          >
+            <Smartphone className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Mobil Bağlan</span>
+          </button>
+
+          {/* Character Studio / Wardrobe Customizer Button */}
+          <button
+            onClick={() => {
+              sound.playClick();
+              setIsCustomizerOpen(true);
+            }}
+            title="Karakter & Pixel Art Stüdyosu / Character Customizer"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-bold font-mono transition-all hover:scale-105"
+            style={{
+              backgroundColor: 'rgba(168, 85, 247, 0.15)',
+              borderColor: 'rgba(168, 85, 247, 0.4)',
+              color: '#C084FC',
+            }}
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Stüdyo</span>
+          </button>
+
           {/* TR / EN Language Switcher Button */}
           <button
             onClick={handleToggleLanguage}

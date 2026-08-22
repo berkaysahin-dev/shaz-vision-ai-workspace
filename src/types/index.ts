@@ -2,7 +2,20 @@ export type TeamId = 'PRODUCT' | 'MARKETING' | 'SUPPORT';
 
 export type MainViewTab = 'office' | 'terminals' | 'code' | 'browser' | 'tasks' | 'tools';
 
-export type AgentId = 'ada' | 'nova' | 'emre' | 'kai' | 'rio' | 'lux' | 'sol' | 'max';
+export type AgentId = 
+  | 'ada' 
+  | 'nova' 
+  | 'emre' 
+  | 'kai' 
+  | 'rio' 
+  | 'lux' 
+  | 'sol' 
+  | 'max'
+  | 'vesper'
+  | 'atlas'
+  | 'nyx'
+  | 'echo'
+  | 'zoe';
 
 export type AgentState =
   | 'IDLE'
@@ -12,7 +25,15 @@ export type AgentState =
   | 'TESTING'
   | 'SPEAKING'
   | 'COMPLETED'
-  | 'ERROR';
+  | 'ERROR'
+  | 'COFFEE'
+  | 'CELEBRATING'
+  | 'ALERT'
+  | 'FOCUS';
+
+export type AccessoryType = 'none' | 'glasses' | 'visor' | 'headphones' | 'hacker-mask' | 'party-hat' | 'beret';
+export type PetType = 'none' | 'cyber-cat' | 'pixel-dog' | 'mini-drone' | 'rubber-duck';
+export type DeskItemType = 'dual-monitors' | 'coffee-mug' | 'energy-drink' | 'plant' | 'quantum-cube';
 
 export interface Agent {
   id: AgentId;
@@ -34,6 +55,13 @@ export interface Agent {
   files: string[];
   skills: string[];
   isPaused: boolean;
+  accessory?: AccessoryType;
+  pet?: PetType;
+  deskItem?: DeskItemType;
+  customOutfitColor?: string;
+  hairColor?: string;
+  level?: number;
+  xp?: number;
 }
 
 export interface TerminalPane {

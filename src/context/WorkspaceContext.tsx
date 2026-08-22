@@ -82,6 +82,12 @@ interface WorkspaceContextType {
   setIsSearchOpen: (open: boolean) => void;
   isTaskModalOpen: boolean;
   setIsTaskModalOpen: (open: boolean) => void;
+  isMobileModalOpen: boolean;
+  setIsMobileModalOpen: (open: boolean) => void;
+  isCustomizerOpen: boolean;
+  setIsCustomizerOpen: (open: boolean) => void;
+  updateAgentCustomization: (agentId: AgentId, data: Partial<Agent>) => void;
+  isMobileCompanionMode: boolean;
   voiceState: GlobalVoiceState;
   globalPrompt: string;
   setGlobalPrompt: (prompt: string) => void;
@@ -123,6 +129,33 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
+  const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
+  const [isCustomizerOpen, setIsCustomizerOpen] = useState(false);
+  const [isMobileCompanionMode, setIsMobileCompanionMode] = useState(false);
+
+  // Check URL query parameters for mobile mode
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('mode') === 'mobile') {
+        setIsMobileCompanionMode(true);
+      }
+    }
+  }, []);
+
+  const updateAgentCustomization = (agentId: AgentId, data: Partial<Agent>) => {
+    setAgents((prev) => {
+      const current = prev[agentId];
+      if (!current) return prev;
+      return {
+        ...prev,
+        [agentId]: {
+          ...current,
+          ...data,
+        },
+      };
+    });
+  };
 
   const [voiceState, setVoiceState] = useState<GlobalVoiceState>(initialVoiceState);
   const [globalPrompt, setGlobalPrompt] = useState('refresh the landing page, spread it across the crew');
@@ -428,6 +461,12 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         setIsSearchOpen,
         isTaskModalOpen,
         setIsTaskModalOpen,
+        isMobileModalOpen,
+        setIsMobileModalOpen,
+        isCustomizerOpen,
+        setIsCustomizerOpen,
+        updateAgentCustomization,
+        isMobileCompanionMode,
         voiceState,
         globalPrompt,
         setGlobalPrompt,
@@ -436,7 +475,7 @@ export const WorkspaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         toggleSound,
         stats: {
           activeAgents,
-          totalAgents: totalAgents || 8,
+          totalAgents: totalAgents || Object.keys(agents).length,
           tasksCount: tasks.filter((t) => t.team === activeTeam).length,
           terminalCount: terminalPanes.length,
           unreadNotifications,
