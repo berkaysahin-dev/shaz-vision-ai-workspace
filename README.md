@@ -71,18 +71,20 @@ Created and maintained by [@berkaysahin-dev](https://github.com/berkaysahin-dev)
 | Agent Name | Role | Department | Default Model | Primary Responsibilities |
 | :--- | :--- | :--- | :--- | :--- |
 | **Ada** | Lead Architect | Architecture & Design | Claude 3.5 Sonnet | System architecture, schema modeling, code review |
-| **Nova** | Backend Developer | Core Backend Lab | gpt-5-codex | Webhook reliability, exponential jitter, API endpoints |
+| **Kaan** | Backend Developer | Core Backend Lab | gpt-5-codex | Webhook reliability, exponential jitter, API endpoints |
 | **Emre** | Fullstack Developer | Fullstack Studio | Fable 5 | Progressive onboarding wizards, auth integration |
-| **Kai** | Frontend Engineer | Frontend & QA Lab | Fable 5 | Playwright test suites, e2e regression testing |
-| **Rio** | Product Designer | Design Studio | Claude 3.5 Sonnet | UI design tokens, micro-interactions, responsive UX |
-| **Vesper** | Quantum & AI Researcher | AI Research & Neural Lab | Claude 3.7 Sonnet | Transformer attention optimization, reasoning benchmarks |
-| **Atlas** | Lead Mobile Architect | Mobile & Cross-Platform Studio | gpt-5-codex | Flutter Wasm engine, SwiftUI & Kotlin native bridges |
-| **Nyx** | Red Team Ethical Hacker | Red Team Cyber Matrix | DeepSeek V3 | Automated fuzzing, memory safety, exploit defense |
-| **Echo** | Data Science & MLOps | Data Science & ML Vault | Gemini 1.5 Pro | Vector pipeline indexing, CUDA / TensorRT optimization |
-| **Zoe** | UX Designer & Motion Artist | UX Creative Lounge & Arcade | Claude 3.5 Sonnet | WebGL shaders, design tokens, micro-animations |
-| **Lux** | Growth Marketing | Marketing & Operations | GPT-4o | Telemetry analytics, conversion optimization, SEO clusters |
-| **Sol** | DevOps & Infra | DevOps & Cloud Matrix | Gemini 1.5 Pro | Orchestration routing, container deployments |
-| **Max** | Security Engineer | Security & QA Room | DeepSeek V3 | Vulnerability scanning, OWASP Top 10 compliance |
+| **Can** | Frontend Engineer | Frontend & QA Lab | Fable 5 | Playwright test suites, e2e regression testing |
+| **Melis** | Product Designer | Design Studio | Claude 3.5 Sonnet | UI design tokens, micro-interactions, responsive UX |
+| **Defne** | Quantum & AI Researcher | AI Research & Neural Lab | Claude 3.7 Sonnet | Transformer attention optimization, reasoning benchmarks |
+| **Ege** | Lead Mobile Architect | Mobile & Cross-Platform Studio | gpt-5-codex | Flutter Wasm engine, SwiftUI & Kotlin native bridges |
+| **Berk** | Red Team Ethical Hacker | Red Team Cyber Matrix | DeepSeek V3 | Automated fuzzing, memory safety, exploit defense |
+| **Zeynep** | Data Science & MLOps | Data Science & ML Vault | Gemini 1.5 Pro | Vector pipeline indexing, CUDA / TensorRT optimization |
+| **Derya** | UX Designer & Motion Artist | UX Creative Lounge & Arcade | Claude 3.5 Sonnet | WebGL shaders, design tokens, micro-animations |
+| **Burak** | Growth Marketing | Marketing & Operations | GPT-4o | Telemetry analytics, conversion optimization, SEO clusters |
+| **Mert** | DevOps & Infra | DevOps & Cloud Matrix | Gemini 1.5 Pro | Orchestration routing, container deployments |
+| **Arda** | Security Engineer | Security & QA Room | DeepSeek V3 | Vulnerability scanning, OWASP Top 10 compliance |
+| **Deniz** | Cloud Architect & SRE | Cloud Matrix & SRE Lab | Gemini 1.5 Pro | Multi-region failover, Istio mesh, 99.999% SLA |
+| **Selin** | QA Automation & Benchmark | Performance & QA Lab | Claude 3.5 Sonnet | k6 load testing, sub-20ms p99 latency benchmarking |
 
 ---
 

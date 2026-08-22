@@ -329,6 +329,64 @@ export const PixelCharacter: React.FC<PixelCharacterProps> = ({
           </svg>
         );
 
+      case 'deniz':
+        return (
+          <svg viewBox="0 0 16 20" className="w-6 h-8 image-pixelated">
+            {!isWalking && <rect x="3" y="1" width="10" height="9" fill="#0C4A6E" rx="1" />}
+            {/* Navy Hair & Headset */}
+            <rect x="4" y="2" width="8" height="3" fill="#0369A1" />
+            <rect x="5" y="5" width="6" height="5" fill="#FEF3C7" />
+            <rect x="6" y="6.5" width="1" height="1" fill="#0369A1" />
+            <rect x="9" y="6.5" width="1" height="1" fill="#0369A1" />
+            <rect x="4" y="10" width="8" height="6" fill={shirtColor || '#0284C7'} />
+            <rect x="7" y="10" width="2" height="6" fill="#38BDF8" />
+            <rect x="3" y="13" width="2" height="2" fill="#FEF3C7" />
+            <rect x="11" y="13" width="2" height="2" fill="#FEF3C7" />
+            {renderAccessory(agent.accessory || 'headphones')}
+            {isWalking ? (
+              <>
+                <rect x="5" y="16" width="2" height="4" fill="#075985" />
+                <rect x="9" y="16" width="2" height="4" fill="#075985" />
+              </>
+            ) : (
+              <>
+                <rect x="7" y="16" width="2" height="3" fill="#075985" />
+                <rect x="4" y="18" width="8" height="1.5" fill="#38BDF8" />
+              </>
+            )}
+          </svg>
+        );
+
+      case 'selin':
+        return (
+          <svg viewBox="0 0 16 20" className="w-6 h-8 image-pixelated">
+            {!isWalking && <rect x="3" y="1" width="10" height="9" fill="#365314" rx="1" />}
+            {/* Blonde Bob & Lime Shirt */}
+            <rect x="4" y="2" width="8" height="3" fill="#FDE047" />
+            <rect x="3" y="4" width="2" height="4" fill="#EAB308" />
+            <rect x="11" y="4" width="2" height="4" fill="#EAB308" />
+            <rect x="5" y="5" width="6" height="5" fill="#FEF08A" />
+            <rect x="6" y="6" width="1" height="1" fill="#14532D" />
+            <rect x="9" y="6" width="1" height="1" fill="#14532D" />
+            <rect x="4" y="10" width="8" height="6" fill={shirtColor || '#84CC16'} />
+            <rect x="7" y="10" width="2" height="6" fill="#A3E635" />
+            <rect x="3" y="13" width="2" height="2" fill="#FEF08A" />
+            <rect x="11" y="13" width="2" height="2" fill="#FEF08A" />
+            {renderAccessory(agent.accessory || 'glasses')}
+            {isWalking ? (
+              <>
+                <rect x="5" y="16" width="2" height="4" fill="#1A2E05" />
+                <rect x="9" y="16" width="2" height="4" fill="#1A2E05" />
+              </>
+            ) : (
+              <>
+                <rect x="7" y="16" width="2" height="3" fill="#1A2E05" />
+                <rect x="4" y="18" width="8" height="1.5" fill="#65A30D" />
+              </>
+            )}
+          </svg>
+        );
+
       // Default generic / remaining agents
       default:
         return (

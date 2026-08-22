@@ -15,7 +15,9 @@ export type AgentId =
   | 'atlas'
   | 'nyx'
   | 'echo'
-  | 'zoe';
+  | 'zoe'
+  | 'deniz'
+  | 'selin';
 
 export type AgentState =
   | 'IDLE'

@@ -40,6 +40,8 @@ const DESK_POSITIONS: Record<AgentId, Position> = {
   nyx: { x: 34, y: 74 },
   echo: { x: 66, y: 74 },
   zoe: { x: 86, y: 22 },
+  deniz: { x: 74, y: 60 },
+  selin: { x: 26, y: 60 },
 };
 
 export const LeftOfficePane: React.FC = () => {

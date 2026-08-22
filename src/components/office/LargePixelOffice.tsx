@@ -28,8 +28,8 @@ export const LargePixelOffice: React.FC = () => {
     setIsInspectorOpen(true);
   };
 
-  const floor1Agents: AgentId[] = ['ada', 'nova', 'emre', 'kai', 'rio', 'sol'];
-  const floor2Agents: AgentId[] = ['vesper', 'atlas', 'nyx', 'echo', 'zoe', 'max'];
+  const floor1Agents: AgentId[] = ['ada', 'nova', 'emre', 'kai', 'rio', 'sol', 'lux', 'deniz'];
+  const floor2Agents: AgentId[] = ['vesper', 'atlas', 'nyx', 'echo', 'zoe', 'max', 'selin'];
 
   const displayedAgents = activeFloor === 'floor1' 
     ? floor1Agents 
