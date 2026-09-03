@@ -20,7 +20,7 @@ Created and maintained by [@berkaysahin-dev](https://github.com/berkaysahin-dev)
 
 ## Key Features & Highlights
 
-### 1. 🔀 Customizable Drag & Drop Workspace (Modular Multi-Pane Layout)
+### 1. Customizable Drag & Drop Workspace (Modular Multi-Pane Layout)
 - **Fluid Drag & Drop Reordering:** Grab any panel header (`office`, `terminals`, `tasks`, `browser`, `mcp`, `code`) and drop it into any column or slot.
 - **Preset Layout Switcher:** Instant single-click switching between curated layouts:
   - **3-Column Grid:** Full studio mode (Office + Multi-Terminal + Tool Suite).
@@ -29,44 +29,44 @@ Created and maintained by [@berkaysahin-dev](https://github.com/berkaysahin-dev)
   - **Browser & DevOps:** Split code editor and live DOM browser visualizer.
 - **Pane Management:** Instant per-pane **Maximize (Full-Screen)**, **Hide/Restore**, and **Reset to Default**. Layout states persist in local storage.
 
-### 2. 📱 Mobile Companion Mode & QR Gateway (Second Screen)
+### 2. Mobile Companion Mode & QR Gateway (Second Screen)
 - **Local Network QR Connect:** Instant camera QR code scanning from your smartphone (`/?mode=mobile`) on the same local network / VPN.
 - **Mobile Read-Along Stream:** Real-time log monitoring from active agent terminals with auto-scroll and stream pause.
 - **1-Tap Approvals:** One-tap **Approve & Ship** or **Reject** on pending agent pull requests, migrations, and deployment permissions.
 - **Push-to-Talk Voice Dispatch:** Speak in Turkish or English via Web Speech API; audio is transcribed locally and dispatched directly to desktop agents.
 - **Zero Cloud Leak:** Source code and credentials remain exclusively on your local desktop disk.
 
-### 3. 🎨 2D Pixel-Art Virtual Office & Character Studio
+### 3. 2D Pixel-Art Virtual Office & Character Studio
 - **11 Specialized Departmental Labs (Multi-Floor View):**
   - Architecture Lab, Core Backend Lab, Fullstack Studio, Frontend & QA Lab, Design Studio.
   - **New R&D Labs:** AI Research & Neural Lab, Mobile & Cross-Platform Studio, Red Team Cyber Matrix, Data Science & ML Vault, UX Creative Lounge & Arcade.
 - **Interactive Character Studio & Wardrobe:**
   - 10-color outfit customizer with instant sprite preview.
-  - **Cyber Accessories:** Cyber Glowing Visor 🕶️, Smart Glasses 👓, RGB Gamer Headset 🎧, Hacker Stealth Mask 🥷, Party Hat 🥳, Artist Beret 🎨.
-  - **Robotic & Desk Companions:** Animated Cyber Cat 🐱, Pixel Dog 🐶, Floating Mini Drone 🛸, Yellow Rubber Duck 🦆.
-  - **Animation Triggers:** Deep Focus Flow (⚡), Coffee Break (☕), Victory Confetti (🎉), Bug Flare Alert (🚨).
+  - **Cyber Accessories:** Cyber Glowing Visor , Smart Glasses , RGB Gamer Headset , Hacker Stealth Mask , Party Hat , Artist Beret .
+  - **Robotic & Desk Companions:** Animated Cyber Cat , Pixel Dog , Floating Mini Drone , Yellow Rubber Duck .
+  - **Animation Triggers:** Deep Focus Flow (), Coffee Break (), Victory Confetti (), Bug Flare Alert ().
 - **Smooth Agent Navigation:** Autonomous wandering, desk visits, and interactive speech bubbles.
 
-### 4. 💻 Tiled Multi-Terminal Grid & Code Workspace
+### 4. Tiled Multi-Terminal Grid & Code Workspace
 - **Concurrent Execution:** Multiple terminal streams running compilation, test runners, and fuzzing concurrently.
 - **Interactive Shell Input:** Terminal CLI prompts supporting `test`, `build`, `scan`, `clear`, and custom scripts.
 - **Integrated Code Editor:** Multi-tab file viewer and editor with live syntax highlighting and modification saves.
 
-### 5. 🌐 Headless Browser Simulator & Live DOM Visualizer
+### 5. Headless Browser Simulator & Live DOM Visualizer
 - **Responsive Viewport Switcher:** Desktop (1440x900) and Mobile (375x812) rendering.
 - **Step-by-Step Tool Trace:** Autonomous browser action logs (Navigation, Selectors, Form Fills, Clicks, Screenshots).
 - **Live DevTools Console:** HTTP response status codes, latency gauges, and console output.
 
-### 6. 🔌 Model Context Protocol (MCP) Hub
+### 6. Model Context Protocol (MCP) Hub
 - Visual connector status and latency telemetry for MCP servers:
   - GitHub Protocol Server, Filesystem Adapter, Headless Browser Runner, PostgreSQL Adapter, Sandbox CLI.
 
-### 7. 🔊 Web Audio API Retro Sound Engine
+### 7. Web Audio API Retro Sound Engine
 - Real-time synthesized 8-bit mechanical keyboard clicks, sci-fi chimes, and action alerts with mute toggle.
 
 ---
 
-## 👥 AI Crew Roster (13 Specialized Agents)
+## AI Crew Roster (13 Specialized Agents)
 
 | Agent Name | Role | Department | Default Model | Primary Responsibilities |
 | :--- | :--- | :--- | :--- | :--- |
@@ -88,56 +88,50 @@ Created and maintained by [@berkaysahin-dev](https://github.com/berkaysahin-dev)
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js (version 18.0.0 or higher)
 - npm, yarn, or pnpm
 
-### 1. Clone the Repository
-```bash
+### 1. Clone the Repository```bash
 git clone https://github.com/berkaysahin-dev/shaz-vision-ai-workspace.git
 cd shaz-vision-ai-workspace
 ```
 
-### 2. Install Dependencies
-```bash
+### 2. Install Dependencies```bash
 npm install
 ```
 
-### 3. Run in Development Web Mode
-```bash
+### 3. Run in Development Web Mode```bash
 npm run dev
 ```
 Open `http://localhost:5173` in your web browser.
 
-### 4. Run as Native Desktop Application (Electron)
-```bash
+### 4. Run as Native Desktop Application (Electron)```bash
 npm run electron
 ```
 
 ### 5. Launch Mobile Companion Mode
-On your smartphone connected to the same Wi-Fi or VPN, open:
-```
+On your smartphone connected to the same Wi-Fi or VPN, open:```
 http://<YOUR_LOCAL_IP>:5173/?mode=mobile
 ```
 Or click **"Mobil Bağlan"** in the top bar to scan the QR code!
 
-### 6. Build for Production
-```bash
+### 6. Build for Production```bash
 npm run build
 ```
 
 ---
 
-## ⌨️ Keyboard Shortcuts
+## ⌨ Keyboard Shortcuts
 
 - `Ctrl + K` / `Cmd + K`: Open Global Command Palette and Quick Search
 - `Escape`: Close active modal or drawer
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 - **Frontend Core:** React 18, TypeScript 5.7, Vite 6
 - **Desktop Container:** Electron
@@ -150,12 +144,12 @@ npm run build
 
 ---
 
-## 👤 Author
+## Author
 
 Developed and maintained by **Berkay Şahin** ([@berkaysahin-dev](https://github.com/berkaysahin-dev)).
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
